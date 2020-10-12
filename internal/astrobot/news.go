@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/drpaneas/astrobot/pkg/earthsky"
+	"github.com/drpaneas/astrobot/pkg/naftermporiki"
+	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/space"
 	"github.com/drpaneas/astrobot/pkg/translate"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
@@ -97,6 +99,40 @@ func GetCurrentNews() {
 	// Unoboxholics
 	unboxholics.GetNews()
 	for _, v := range unboxholics.NewsDBUnboxholics {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// Naftemporiki
+	naftermporiki.GetNews()
+	for _, v := range naftermporiki.NewsDBNaftermporiki {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// news247
+	news247.GetNews()
+	for _, v := range news247.NewsDBNews247 {
 		if v.Title == "" {
 			continue
 		}
