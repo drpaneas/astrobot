@@ -9,6 +9,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
+	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/space"
 	"github.com/drpaneas/astrobot/pkg/tanea"
 	"github.com/drpaneas/astrobot/pkg/translate"
@@ -151,6 +152,23 @@ func GetCurrentNews() {
 	// TaNea
 	tanea.GetNews()
 	for _, v := range tanea.NewsDBTaNea {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// protothema
+	protothema.GetNews()
+	for _, v := range protothema.NewsDBProtoThema {
 		if v.Title == "" {
 			continue
 		}
