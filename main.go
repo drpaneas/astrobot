@@ -7,11 +7,19 @@ import (
 	"github.com/drpaneas/astrobot/internal/astrobot"
 )
 
+func gitGoodState() {
+	astrobot.IsItUpToDate() // Pull Changes (if there are any)
+	if !astrobot.IsItUpToDate() {
+		log.Fatal("Repo is not clean") // There should not be any changes now
+	}
+}
+
 const (
 	filenameDB string = "news.before"
 )
 
 func main() {
+	gitGoodState()
 
 	dbFile := astrobot.GetFileDBPath(filenameDB)
 
@@ -28,8 +36,8 @@ func main() {
 		log.Println("Diffing the two databases ...")
 		hasNews := astrobot.HasAnyDifference()
 		if hasNews {
-			astrobot.SaveDBFile(dbFile) // Replace the dbFile with a new one
 			astrobot.CreateNewPosts()   // Write the newposts
+			astrobot.SaveDBFile(dbFile) // Replace the dbFile with a new one
 		} else {
 			log.Println("There 0 news since last time we checked")
 			os.Exit(0)

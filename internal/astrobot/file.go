@@ -70,7 +70,7 @@ func constructPostFilePath(filename string) string {
 func AddFile(title, image, source, description, link string) {
 	currentTime := time.Now()
 	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02"))
-	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"News\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nRead More at: %s\n", title, date, image, source, description, link)
+	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"Ειδήσεις\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, source, description, link)
 	filename := constructFilenamePost(title)
 	filepath := constructPostFilePath(filename)
 	writeFile(filepath, content)

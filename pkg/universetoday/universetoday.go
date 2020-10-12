@@ -58,6 +58,10 @@ func getDescription(postid string) (desc string) {
 		// Remove newlines
 		re := regexp.MustCompile(`\r?\n`)
 		desc = re.ReplaceAllString(desc, " ")
+		// Remove first char if it's empty
+		if desc[:0] == "" {
+			desc = desc[1:]
+		}
 	})
 	return desc
 }

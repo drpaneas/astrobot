@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/space"
+	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
 )
 
@@ -90,6 +92,23 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// Unoboxholics
+	unboxholics.GetNews()
+	for _, v := range unboxholics.NewsDBUnboxholics {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
@@ -131,7 +150,19 @@ func HasAnyDifference() bool {
 func CreateNewPosts() {
 	for _, v := range DiffDB {
 		filename := GetFilename(v.Image, v.Title)
+
+		t := time.Now()
+		timer := t.Format("20060102150405")
+		branch := fmt.Sprintf("news_%s", timer)
+		ChangeBranch(branch)
+
 		DownloadImage(v.Image, v.Title)
 		AddFile(v.Title, filename, v.Source, v.Description, v.Link)
+
+		GitAdd()
+		GitCommit()
+		GitPush(branch)
+		CheckoutMaster()
+		time.Sleep(1 * time.Second)
 	}
 }
