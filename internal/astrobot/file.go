@@ -69,7 +69,7 @@ func constructPostFilePath(filename string) string {
 // AddFile creates a new post content from the NewsDB and then it saves the file into the disk.
 func AddFile(title, image, source, description, link string) {
 	currentTime := time.Now()
-	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02"))
+	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02T15:04:05-07:00")) // ISO 8601 (RFC 3339)
 	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"Ειδήσεις\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, source, description, link)
 	filename := constructFilenamePost(title)
 	filepath := constructPostFilePath(filename)

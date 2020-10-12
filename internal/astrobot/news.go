@@ -8,6 +8,7 @@ import (
 
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/space"
+	"github.com/drpaneas/astrobot/pkg/translate"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
 )
@@ -38,7 +39,7 @@ func GetCurrentNews() {
 
 	// Space.com
 	space.GetNews()
-	//translate.NewsSpacego()
+	translate.NewsSpacego()
 	for _, v := range space.NewsDBSpace {
 		if v.Title == "" {
 			continue
@@ -56,7 +57,7 @@ func GetCurrentNews() {
 
 	// EarthSky
 	earthsky.GetNews()
-	//translate.NewsEarthSkygo()
+	translate.NewsEarthSkygo()
 	for _, v := range earthsky.NewsDBEarthSky {
 		if v.Title == "" {
 			continue
@@ -74,7 +75,7 @@ func GetCurrentNews() {
 
 	// UniverseToday
 	universetoday.GetNews()
-	//translate.NewsDBgo()
+	translate.NewsDBgo()
 	for _, v := range universetoday.NewsDBUniverseToday {
 		if strings.Contains(v.Title, "Hangout") {
 			continue
@@ -157,7 +158,7 @@ func CreateNewPosts() {
 		ChangeBranch(branch)
 
 		DownloadImage(v.Image, v.Title)
-		AddFile(v.Title, filename, v.Source, v.Description, v.Link)
+		AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
 
 		GitAdd()
 		GitCommit()
