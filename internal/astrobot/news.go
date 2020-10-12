@@ -10,6 +10,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/space"
+	"github.com/drpaneas/astrobot/pkg/tanea"
 	"github.com/drpaneas/astrobot/pkg/translate"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
@@ -133,6 +134,23 @@ func GetCurrentNews() {
 	// news247
 	news247.GetNews()
 	for _, v := range news247.NewsDBNews247 {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// TaNea
+	tanea.GetNews()
+	for _, v := range tanea.NewsDBTaNea {
 		if v.Title == "" {
 			continue
 		}
