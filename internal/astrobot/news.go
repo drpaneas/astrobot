@@ -11,6 +11,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/space"
+	"github.com/drpaneas/astrobot/pkg/sputniknews"
 	"github.com/drpaneas/astrobot/pkg/tanea"
 	"github.com/drpaneas/astrobot/pkg/translate"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
@@ -169,6 +170,23 @@ func GetCurrentNews() {
 	// protothema
 	protothema.GetNews()
 	for _, v := range protothema.NewsDBProtoThema {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// sputniknews
+	sputniknews.GetNews()
+	for _, v := range sputniknews.NewsDBsputnik {
 		if v.Title == "" {
 			continue
 		}
