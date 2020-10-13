@@ -117,9 +117,9 @@ func GetNews() {
 		desc = re.ReplaceAllString(desc, " ")
 	})
 
-	titleQuery := "#post-113967 > div.td-post-header.td-pb-padding-side > header > h1"
-	doc.Find(titleQuery).Each(func(i int, s *goquery.Selection) {
-		title = s.Text()
+	titleQuery := "#td_uid_9_5f85fad3e4c92 > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a > img"
+	Doc.Find(titleQuery).Each(func(i int, s *goquery.Selection) {
+		title, _ = s.Attr("title")
 	})
 	NewsDBecozen = append(NewsDBecozen, News{
 		Description: desc,
