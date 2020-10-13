@@ -37,7 +37,6 @@ type News struct {
 	GreekTitle  string `json:"greektitle"`
 	GreekDesc   string `json:"greekdesc"`
 	Source      string `json:"source"`
-	ID          string `json:"id"`
 }
 
 // Remove the first character of a string
@@ -69,7 +68,7 @@ func removeDuplicates(elements []string) []string { // change string to int here
 // titleQuery := "#news-item-209297 > header > h1"
 
 // getIDs fetches the news of sputniknews.gr
-func getIDs() {
+func getIDs() []string {
 	var id, idString string
 	var ok bool
 
@@ -87,11 +86,7 @@ func getIDs() {
 	}
 	idStringSlice := strings.Split(idString, " ")
 	uniqueID := removeDuplicates(idStringSlice)
-	for _, v := range uniqueID {
-		NewsDBcnn = append(NewsDBcnn, News{
-			ID: v,
-		})
-	}
+	return uniqueID
 }
 
 // GetNews gets the news for cnn.gr
@@ -103,11 +98,14 @@ func GetNews() {
 	var ok bool
 
 	// Create the DB with IDs
-	getIDs()
+	uniqueID := getIDs()
 
 	// Loop through IDs and get data
-	for i, v := range NewsDBcnn {
-		id := strings.Replace(v.ID, "item-", "", -1)
+	for number, v := range uniqueID {
+		if number == 2 {
+			break
+		}
+		id := strings.Replace(v, "item-", "", -1)
 		// Get the link
 		Doc.Find("#item-" + id).Each(func(i int, s *goquery.Selection) {
 			link, ok = s.Attr("href")
@@ -135,13 +133,14 @@ func GetNews() {
 			re := regexp.MustCompile(`\r?\n`)
 			desc = re.ReplaceAllString(desc, " ")
 		})
-		NewsDBcnn[i].Link = link
-		NewsDBcnn[i].Title = title
-		NewsDBcnn[i].Description = desc
-		NewsDBcnn[i].Image = image
-		NewsDBcnn[i].Source = "cnn.gr"
+		NewsDBcnn = append(NewsDBcnn, News{
+			Description: desc,
+			Image:       image,
+			Link:        link,
+			Source:      "cnn.gr",
+			Title:       title,
+		})
 	}
-
 }
 
 func getHTML(page string) (doc *goquery.Document) {
