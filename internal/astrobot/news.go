@@ -10,7 +10,9 @@ import (
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/ecozen"
 	"github.com/drpaneas/astrobot/pkg/ert"
+	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/gazzetta"
+	"github.com/drpaneas/astrobot/pkg/huffpost"
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
@@ -330,6 +332,42 @@ func GetCurrentNews() {
 	log.Println("gazzetta.GetNews()")
 	gazzetta.GetNews()
 	for _, v := range gazzetta.NewsDBgazzetta {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// huffingtonpost.gr
+	log.Println("huffpost.GetNews()")
+	huffpost.GetNews()
+	for _, v := range huffpost.NewsDBhuffingtonpost {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// esquire.com.gr
+	log.Println("esquire.GetNews()")
+	esquire.GetNews()
+	for _, v := range esquire.NewsDBesquire {
 		if v.Title == "" {
 			continue
 		}
