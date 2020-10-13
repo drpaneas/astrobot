@@ -12,6 +12,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
+	"github.com/drpaneas/astrobot/pkg/newsgr"
 	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/space"
 	"github.com/drpaneas/astrobot/pkg/sputniknews"
@@ -254,6 +255,24 @@ func GetCurrentNews() {
 	log.Println("in.GetNews()")
 	in.GetNews()
 	for _, v := range in.NewsDBin {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// news.gr
+	log.Println("newsgr.GetNews()")
+	newsgr.GetNews()
+	for _, v := range newsgr.NewsDBnewsgr {
 		if v.Title == "" {
 			continue
 		}
