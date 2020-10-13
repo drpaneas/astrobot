@@ -22,6 +22,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/space"
 	"github.com/drpaneas/astrobot/pkg/sputniknews"
 	"github.com/drpaneas/astrobot/pkg/tanea"
+	"github.com/drpaneas/astrobot/pkg/tovima"
 	"github.com/drpaneas/astrobot/pkg/translate"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
@@ -368,6 +369,24 @@ func GetCurrentNews() {
 	log.Println("esquire.GetNews()")
 	esquire.GetNews()
 	for _, v := range esquire.NewsDBesquire {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// tovima.gr
+	log.Println("tovima.GetNews()")
+	tovima.GetNews()
+	for _, v := range tovima.NewsDBtovima {
 		if v.Title == "" {
 			continue
 		}
