@@ -8,8 +8,10 @@ import (
 
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
+	"github.com/drpaneas/astrobot/pkg/ecozen"
 	"github.com/drpaneas/astrobot/pkg/ert"
 	"github.com/drpaneas/astrobot/pkg/in"
+	"github.com/drpaneas/astrobot/pkg/maxmag"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
@@ -273,6 +275,42 @@ func GetCurrentNews() {
 	log.Println("newsgr.GetNews()")
 	newsgr.GetNews()
 	for _, v := range newsgr.NewsDBnewsgr {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// maxmag.gr
+	log.Println("maxmag.GetNews()")
+	maxmag.GetNews()
+	for _, v := range maxmag.NewsDBmaxmag {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// ecozen.gr
+	log.Println("ecozen.GetNews()")
+	ecozen.GetNews()
+	for _, v := range ecozen.NewsDBecozen {
 		if v.Title == "" {
 			continue
 		}
