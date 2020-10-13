@@ -40,7 +40,9 @@ func TextToGreek(text string) string {
 // NewsDBgo for UniverseToday
 func NewsDBgo() {
 	for i, db := range universetoday.NewsDBUniverseToday {
+		log.Println(db.Title)
 		universetoday.NewsDBUniverseToday[i].GreekTitle = TextToGreek(db.Title)
+		log.Println(db.Description)
 		universetoday.NewsDBUniverseToday[i].GreekDesc = TextToGreek(db.Description)
 	}
 }

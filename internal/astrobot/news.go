@@ -8,6 +8,8 @@ import (
 
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
+	"github.com/drpaneas/astrobot/pkg/ert"
+	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/protothema"
@@ -44,7 +46,9 @@ func GetCurrentNews() {
 	log.Println("Saving new newsposts in NewsDB ...")
 
 	// Space.com
+	log.Println("space.GetNews()")
 	space.GetNews()
+	log.Println("translate.NewsSpacego()")
 	translate.NewsSpacego()
 	for _, v := range space.NewsDBSpace {
 		if v.Title == "" {
@@ -62,7 +66,9 @@ func GetCurrentNews() {
 	}
 
 	// EarthSky
+	log.Println("earthsky.GetNews()")
 	earthsky.GetNews()
+	log.Println("translate.NewsEarthSkygo()")
 	translate.NewsEarthSkygo()
 	for _, v := range earthsky.NewsDBEarthSky {
 		if v.Title == "" {
@@ -80,7 +86,9 @@ func GetCurrentNews() {
 	}
 
 	// UniverseToday
+	log.Println("universetoday.GetNews()")
 	universetoday.GetNews()
+	log.Println("translate.NewsDBgo()")
 	translate.NewsDBgo()
 	for _, v := range universetoday.NewsDBUniverseToday {
 		if strings.Contains(v.Title, "Hangout") {
@@ -101,6 +109,7 @@ func GetCurrentNews() {
 	}
 
 	// Unoboxholics
+	log.Println("unboxholics.GetNews()")
 	unboxholics.GetNews()
 	for _, v := range unboxholics.NewsDBUnboxholics {
 		if v.Title == "" {
@@ -118,6 +127,7 @@ func GetCurrentNews() {
 	}
 
 	// Naftemporiki
+	log.Println("naftermporiki.GetNews()")
 	naftermporiki.GetNews()
 	for _, v := range naftermporiki.NewsDBNaftermporiki {
 		if v.Title == "" {
@@ -152,6 +162,7 @@ func GetCurrentNews() {
 	}
 
 	// TaNea
+	log.Println("tanea.GetNews()")
 	tanea.GetNews()
 	for _, v := range tanea.NewsDBTaNea {
 		if v.Title == "" {
@@ -186,6 +197,7 @@ func GetCurrentNews() {
 	}
 
 	// sputniknews
+	log.Println("sputniknews.GetNews()")
 	sputniknews.GetNews()
 	for _, v := range sputniknews.NewsDBsputnik {
 		if v.Title == "" {
@@ -203,8 +215,45 @@ func GetCurrentNews() {
 	}
 
 	// CNN.gr
+	log.Println("cnn.GetNews()")
 	cnn.GetNews()
 	for _, v := range cnn.NewsDBcnn {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// ert.gr
+	log.Println("ert.GetNews()")
+	ert.GetNews()
+	for _, v := range ert.NewsDBErt {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// in.gr
+	log.Println("in.GetNews()")
+	in.GetNews()
+	for _, v := range in.NewsDBin {
 		if v.Title == "" {
 			continue
 		}
