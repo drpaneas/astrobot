@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
@@ -187,6 +188,23 @@ func GetCurrentNews() {
 	// sputniknews
 	sputniknews.GetNews()
 	for _, v := range sputniknews.NewsDBsputnik {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// CNN.gr
+	cnn.GetNews()
+	for _, v := range cnn.NewsDBcnn {
 		if v.Title == "" {
 			continue
 		}
