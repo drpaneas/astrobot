@@ -10,6 +10,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/ecozen"
 	"github.com/drpaneas/astrobot/pkg/ert"
+	"github.com/drpaneas/astrobot/pkg/gazzetta"
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
@@ -311,6 +312,24 @@ func GetCurrentNews() {
 	log.Println("ecozen.GetNews()")
 	ecozen.GetNews()
 	for _, v := range ecozen.NewsDBecozen {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			GreekTitle:  v.Title,
+			Description: v.Description,
+			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// gazzetta.gr
+	log.Println("gazzetta.GetNews()")
+	gazzetta.GetNews()
+	for _, v := range gazzetta.NewsDBgazzetta {
 		if v.Title == "" {
 			continue
 		}
