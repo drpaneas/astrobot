@@ -95,40 +95,44 @@ func GetNews() {
 	var desc string
 	var link string
 
-	linkQuery := fmt.Sprintf("#td_uid_9_5f85fad3e4c92 > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a")
+	linkQuery := fmt.Sprintf("#td-outer-wrap > div > div.td-container.td-category-container > div > div:nth-child(1) > div > div > div > div")
 	Doc.Find(linkQuery).Each(func(i int, s *goquery.Selection) {
-		tmpLink, ok := s.Attr("href")
-		if ok {
-			link = tmpLink
-		}
-	})
+		id, _ := s.Attr("id")
 
-	imageQuery := fmt.Sprintf("#td_uid_9_5f85fad3e4c92 > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a > img")
-	Doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
-		image, _ = s.Attr("src")
-	})
+		linkQuery := fmt.Sprintf("#%s > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a", id)
+		Doc.Find(linkQuery).Each(func(i int, s *goquery.Selection) {
+			tmpLink, ok := s.Attr("href")
+			if ok {
+				link = tmpLink
+			}
+		})
 
-	doc := getHTML(link)
-	descQuery := fmt.Sprintf("#gt-speech > p:nth-child(1)")
-	doc.Find(descQuery).Each(func(i int, s *goquery.Selection) {
-		desc = s.Text()
-		// Remove newlines
-		re := regexp.MustCompile(`\r?\n`)
-		desc = re.ReplaceAllString(desc, " ")
-	})
+		imageQuery := fmt.Sprintf("#%s > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a > img", id)
+		Doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
+			image, _ = s.Attr("src")
+		})
 
-	titleQuery := "#td_uid_9_5f85fad3e4c92 > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a > img"
-	Doc.Find(titleQuery).Each(func(i int, s *goquery.Selection) {
-		title, _ = s.Attr("title")
-	})
-	NewsDBecozen = append(NewsDBecozen, News{
-		Description: desc,
-		Image:       image,
-		Link:        link,
-		Source:      "ecozen.gr",
-		Title:       title,
-	})
+		doc := getHTML(link)
+		descQuery := fmt.Sprintf("#gt-speech > p:nth-child(1)")
+		doc.Find(descQuery).Each(func(i int, s *goquery.Selection) {
+			desc = s.Text()
+			// Remove newlines
+			re := regexp.MustCompile(`\r?\n`)
+			desc = re.ReplaceAllString(desc, " ")
+		})
 
+		titleQuery := fmt.Sprintf("#%s > div.td-big-grid-wrapper > div.td_module_mx5.td-animation-stack.td-big-grid-post-0.td-big-grid-post.td-big-thumb > div.td-module-thumb > a > img", id)
+		Doc.Find(titleQuery).Each(func(i int, s *goquery.Selection) {
+			title, _ = s.Attr("title")
+		})
+		NewsDBecozen = append(NewsDBecozen, News{
+			Description: desc,
+			Image:       image,
+			Link:        link,
+			Source:      "ecozen.gr",
+			Title:       title,
+		})
+	})
 }
 
 func getHTML(page string) (doc *goquery.Document) {

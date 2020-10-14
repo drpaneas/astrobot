@@ -24,6 +24,7 @@ func GetFilename(downloadLink, title string) string {
 	title = strings.ReplaceAll(title, ":", "_") // Replace : with underscore
 	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
 	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
+	title = strings.ReplaceAll(title, "\"", "") // Replace ; with underscore
 
 	filename := fmt.Sprintf("%s%s", title, extension)
 	return filename
@@ -38,6 +39,7 @@ func constructFilenamePost(title string) string {
 	title = strings.ReplaceAll(title, ":", "_") // Replace : with underscore
 	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
 	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
+	title = strings.ReplaceAll(title, "\"", "") // Replace ; with underscore
 	return title + ".md"
 }
 
@@ -66,10 +68,24 @@ func constructPostFilePath(filename string) string {
 	return postFilePath + filename
 }
 
+func fixTitle(title string) string {
+	if strings.Contains(title, "\"") {
+		title = strings.ReplaceAll(title, "\"", "")
+	}
+	if strings.Contains(title, "«") {
+		title = strings.ReplaceAll(title, "«", "")
+	}
+	if strings.Contains(title, "»") {
+		title = strings.ReplaceAll(title, "»", "")
+	}
+	return title
+}
+
 // AddFile creates a new post content from the NewsDB and then it saves the file into the disk.
 func AddFile(title, image, source, description, link string) {
 	currentTime := time.Now()
 	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02T15:04:05-07:00")) // ISO 8601 (RFC 3339)
+	title = fixTitle(title)
 	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"Ειδήσεις\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, source, description, link)
 	filename := constructFilenamePost(title)
 	filepath := constructPostFilePath(filename)

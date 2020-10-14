@@ -470,9 +470,15 @@ func CreateNewPosts() {
 	for _, v := range DiffDB {
 		filename := GetFilename(v.Image, v.Title)
 		if isGreek(v.Source) {
+			IsItUpToDate()
 			CheckoutMaster()
 			DownloadImage(v.Image, v.Title)
 			AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
+			if BuildFails() {
+				log.Println("FAILURE !!!!!!!!!!!!!!")
+				log.Printf("Problem is found at %v\n\n\n", v)
+				continue
+			}
 			GitAdd()
 			GitCommit()
 			GitPush("master")
@@ -480,11 +486,11 @@ func CreateNewPosts() {
 			t := time.Now()
 			timer := t.Format("20060102150405")
 			branch := fmt.Sprintf("news_%s", timer)
+			IsItUpToDate()
 			ChangeBranch(branch)
 
 			DownloadImage(v.Image, v.Title)
 			AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
-
 			GitAdd()
 			GitCommit()
 			GitPush(branch)

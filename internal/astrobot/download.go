@@ -53,8 +53,8 @@ func DownloadImage(image, title string) {
 		log.Fatalf("failed to open image: %v", err)
 	}
 
-	// Resize the cropped image to width = 640 preserving the aspect ratio.
-	destImage := imaging.Resize(src, 640, 0, imaging.Lanczos)
+	// Resize the cropped image to width = 220 preserving the aspect ratio.
+	destImage := imaging.Resize(src, 220, 0, imaging.Lanczos)
 
 	// Save the resulting image as JPEG.
 	err = imaging.Save(destImage, filepath)
