@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/disintegration/imaging"
 )
 
 var imagesFilepath string = "/Users/drpaneas/github/starlordgr/static/images/post/"
@@ -44,5 +46,19 @@ func DownloadImage(image, title string) {
 	err := downloadFile(filepath, image)
 	if err != nil {
 		log.Println(err)
+	}
+	// Open a test image.
+	src, err := imaging.Open(filepath)
+	if err != nil {
+		log.Fatalf("failed to open image: %v", err)
+	}
+
+	// Resize the cropped image to width = 640 preserving the aspect ratio.
+	destImage := imaging.Resize(src, 640, 0, imaging.Lanczos)
+
+	// Save the resulting image as JPEG.
+	err = imaging.Save(destImage, filepath)
+	if err != nil {
+		log.Fatalf("failed to save image: %v", err)
 	}
 }
