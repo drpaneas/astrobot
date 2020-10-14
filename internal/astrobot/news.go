@@ -55,8 +55,8 @@ func GetCurrentNews() {
 	// Space.com
 	log.Println("space.GetNews()")
 	space.GetNews()
-	log.Println("translate.NewsSpacego()")
-	translate.NewsSpacego()
+	// log.Println("translate.NewsSpacego()")
+	// translate.NewsSpacego()
 	for _, v := range space.NewsDBSpace {
 		if v.Title == "" {
 			continue
@@ -75,8 +75,8 @@ func GetCurrentNews() {
 	// EarthSky
 	log.Println("earthsky.GetNews()")
 	earthsky.GetNews()
-	log.Println("translate.NewsEarthSkygo()")
-	translate.NewsEarthSkygo()
+	// log.Println("translate.NewsEarthSkygo()")
+	// translate.NewsEarthSkygo()
 	for _, v := range earthsky.NewsDBEarthSky {
 		if v.Title == "" {
 			continue
@@ -95,8 +95,8 @@ func GetCurrentNews() {
 	// UniverseToday
 	log.Println("universetoday.GetNews()")
 	universetoday.GetNews()
-	log.Println("translate.NewsDBgo()")
-	translate.NewsDBgo()
+	// log.Println("translate.NewsDBgo()")
+	// translate.NewsDBgo()
 	for _, v := range universetoday.NewsDBUniverseToday {
 		if strings.Contains(v.Title, "Hangout") {
 			continue
@@ -425,9 +425,9 @@ func HasAnyDifference() bool {
 			// Save the current new (which was posted before) into the DiffDB
 			DiffDB = append(DiffDB, News{
 				Title:       v.Title,
-				GreekTitle:  v.GreekTitle,
+				GreekTitle:  translate.TextToGreek(v.Title),
 				Description: v.Description,
-				GreekDesc:   v.GreekDesc,
+				GreekDesc:   translate.TextToGreek(v.Description),
 				Link:        v.Link,
 				Image:       v.Image,
 				Source:      v.Source,
@@ -437,23 +437,61 @@ func HasAnyDifference() bool {
 	return thereIsDiff
 }
 
+func isGreek(source string) bool {
+	sources := [...]string{
+		"huffingtonpost.gr",
+		"ecozen.gr",
+		"news247.gr",
+		"in.gr",
+		"tovima.gr",
+		"unboxholics.com",
+		"ert.gr",
+		"esquire.com.gr",
+		"naftemporiki.gr",
+		"maxmag.gr",
+		"cnn.gr",
+		"tanea.gr",
+		"protothema.gr",
+		"gazzetta.gr",
+		"sputniknews.gr",
+		"news.gr",
+	}
+	for _, v := range sources {
+		if source == v {
+			log.Printf("%s is a Greek site. Push directly to master branch.", v)
+			return true
+		}
+	}
+	return false
+}
+
 // CreateNewPosts writes news taken from DiffDB
 func CreateNewPosts() {
 	for _, v := range DiffDB {
 		filename := GetFilename(v.Image, v.Title)
+		if isGreek(v.Source) {
+			CheckoutMaster()
+			DownloadImage(v.Image, v.Title)
+			AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
+			GitAdd()
+			GitCommit()
+			GitPush("master")
+		} else {
+			t := time.Now()
+			timer := t.Format("20060102150405")
+			branch := fmt.Sprintf("news_%s", timer)
+			ChangeBranch(branch)
 
-		t := time.Now()
-		timer := t.Format("20060102150405")
-		branch := fmt.Sprintf("news_%s", timer)
-		ChangeBranch(branch)
+			DownloadImage(v.Image, v.Title)
+			AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
 
-		DownloadImage(v.Image, v.Title)
-		AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
-
-		GitAdd()
-		GitCommit()
-		GitPush(branch)
-		CheckoutMaster()
-		time.Sleep(1 * time.Second)
+			GitAdd()
+			GitCommit()
+			GitPush(branch)
+			CheckoutMaster()
+		}
+		wait := 5 * time.Second
+		log.Printf("\n -- Waiting %v seconds -- \n", wait)
+		time.Sleep(wait)
 	}
 }
