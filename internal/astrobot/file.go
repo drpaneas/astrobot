@@ -25,6 +25,7 @@ func GetFilename(downloadLink, title string) string {
 	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
 	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
 	title = strings.ReplaceAll(title, "\"", "") // Replace ; with underscore
+	title = strings.ReplaceAll(title, "#", "")  // Replace ; with underscore
 
 	filename := fmt.Sprintf("%s%s", title, extension)
 	return filename
@@ -40,6 +41,7 @@ func constructFilenamePost(title string) string {
 	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
 	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
 	title = strings.ReplaceAll(title, "\"", "") // Replace ; with underscore
+	title = strings.ReplaceAll(title, "#", "")  // Replace ; with underscore
 	return title + ".md"
 }
 
