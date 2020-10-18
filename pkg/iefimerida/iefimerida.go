@@ -1,4 +1,4 @@
-package tovima
+package iefimerida
 
 import (
 	"fmt"
@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	url string = "https://www.tovima.gr/tag/nasa"
+	url     string = "https://www.iefimerida.gr/tag/diastima"
+	baseURL string = "https://www.iefimerida.gr"
 )
 
 func stripSpaces(s string) string {
@@ -21,11 +22,11 @@ func stripSpaces(s string) string {
 	return fmt.Sprintf("%q", str)
 }
 
-// Doc for tovima.gr
+// Doc for iefimerida.gr
 var Doc *goquery.Document = getHTML(url)
 
-// NewsDBtovima db with the news
-var NewsDBtovima []News
+// NewsDBiefimerida db with the news
+var NewsDBiefimerida []News
 
 // News represent an news article
 type News struct {
@@ -42,56 +43,48 @@ func trimFirstRune(s string) string {
 	return s[i:]
 }
 
-// GetNews gets the news for ecozen.gr
+// GetNews gets the news for cnn.gr
 func GetNews() {
 	var title string
 	var image string
 	var desc string
 	var link string
+	var ok bool
 
-	linkQuery := fmt.Sprintf("#full-article-list > ul > li.modern-row.tablerow.mt_1 > div.mask-title.pos-rel > a")
-	Doc.Find(linkQuery).Each(func(i int, s *goquery.Selection) {
-		tmpLink, ok := s.Attr("href")
+	Doc.Find("#taxonomy-term-180 > div.tag-content > div > article.iefimerida-article.teasers.big.big-teaser > h3 > a").Each(func(i int, s *goquery.Selection) {
+		link, ok = s.Attr("href")
 		if ok {
-			link = tmpLink
-			title = s.Text()
-			if string(title[0]) == " " {
-				title = trimFirstRune(title)
-			}
-			if strings.Contains(title, ":") {
-				tmpTitle := strings.Split(title, ":")
-				title = tmpTitle[1]
-				if string(title[0]) == " " {
-					title = trimFirstRune(title)
-				}
-			}
+			link = baseURL + link
+		}
+		title = s.Text()
+		re := regexp.MustCompile(`\r?\n`)
+		title = re.ReplaceAllString(title, " ")
+		if string(title[0]) == " " {
+			title = strings.TrimSpace(title)
 		}
 	})
-
-	doc := getHTML(link)
-	imageQuery := fmt.Sprintf("div.hentry > div.article-main.tablerow.fullwidth.pos-rel.flex-container > div.mainpost > div.image-container > a > img")
-	doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
-		image, _ = s.Attr("src")
-	})
-
-	descQuery := fmt.Sprintf("div.hentry > h2")
-	doc.Find(descQuery).Each(func(i int, s *goquery.Selection) {
+	descQuery := fmt.Sprintf("#taxonomy-term-180 > div.tag-content > div > article.iefimerida-article.teasers.big.big-teaser > div.field-summary")
+	Doc.Find(descQuery).Each(func(i int, s *goquery.Selection) {
 		desc = s.Text()
 		// Remove newlines
 		re := regexp.MustCompile(`\r?\n`)
 		desc = re.ReplaceAllString(desc, " ")
-		if string(desc[0]) == " " {
-			desc = trimFirstRune(desc)
-		}
+		desc = trimFirstRune(desc)
 	})
-	NewsDBtovima = append(NewsDBtovima, News{
+	imageQuery := fmt.Sprintf("#taxonomy-term-180 > div.tag-content > div > article.iefimerida-article.teasers.big.big-teaser > div.image-wrapper.tag-inside > a > picture > img")
+	Doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
+		tmpimage, _ := s.Attr("src")
+		tmp := strings.Split(tmpimage, "?")
+		image = baseURL + tmp[0]
+	})
+
+	NewsDBiefimerida = append(NewsDBiefimerida, News{
 		Description: desc,
 		Image:       image,
 		Link:        link,
-		Source:      "tovima.gr",
+		Source:      "iefimerida.gr",
 		Title:       title,
 	})
-
 }
 
 func getHTML(page string) (doc *goquery.Document) {

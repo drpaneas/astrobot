@@ -11,7 +11,10 @@ import (
 	"time"
 )
 
-var postFilePath string = "/Users/drpaneas/github/starlordgr/content/english/post/"
+const (
+	postEnglishFilePath string = "/Users/drpaneas/github/starlordgr/content/english/post/"
+	postGreekFilePath   string = "/Users/drpaneas/github/starlordgr/content/greek/post/"
+)
 
 // GetFilename takes a URL as input and a name. It returns the filename with the extension.
 func GetFilename(downloadLink, title string) string {
@@ -24,8 +27,8 @@ func GetFilename(downloadLink, title string) string {
 	title = strings.ReplaceAll(title, ":", "_") // Replace : with underscore
 	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
 	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
-	title = strings.ReplaceAll(title, "\"", "") // Replace ; with underscore
-	title = strings.ReplaceAll(title, "#", "")  // Replace ; with underscore
+	title = strings.ReplaceAll(title, "\"", "") // Replace \ with underscore
+	title = strings.ReplaceAll(title, "#", "")  // Replace # with underscore
 
 	filename := fmt.Sprintf("%s%s", title, extension)
 	return filename
@@ -40,8 +43,8 @@ func constructFilenamePost(title string) string {
 	title = strings.ReplaceAll(title, ":", "_") // Replace : with underscore
 	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
 	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
-	title = strings.ReplaceAll(title, "\"", "") // Replace ; with underscore
-	title = strings.ReplaceAll(title, "#", "")  // Replace ; with underscore
+	title = strings.ReplaceAll(title, "\"", "") // Replace \ with underscore
+	title = strings.ReplaceAll(title, "#", "")  // Replace # with underscore
 	return title + ".md"
 }
 
@@ -66,8 +69,11 @@ func writeFile(fullfilepath, content string) {
 	}
 }
 
-func constructPostFilePath(filename string) string {
-	return postFilePath + filename
+func constructEnglishPostFilePath(filename string) string {
+	return postEnglishFilePath + filename
+}
+func constructGreekPostFilePath(filename string) string {
+	return postGreekFilePath + filename
 }
 
 func fixTitle(title string) string {
@@ -88,9 +94,14 @@ func AddFile(title, image, source, description, link string) {
 	currentTime := time.Now()
 	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02T15:04:05-07:00")) // ISO 8601 (RFC 3339)
 	title = fixTitle(title)
-	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"Ειδήσεις\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, source, description, link)
 	filename := constructFilenamePost(title)
-	filepath := constructPostFilePath(filename)
+	filepath := constructEnglishPostFilePath(filename)
+	category := "News"
+	if isGreek(source) {
+		filepath = constructGreekPostFilePath(filename)
+		category = "Ειδήσεις"
+	}
+	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"%s\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, category, source, description, link)
 	writeFile(filepath, content)
 }
 

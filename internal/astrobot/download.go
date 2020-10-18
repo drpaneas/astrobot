@@ -1,6 +1,7 @@
 package astrobot
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -40,9 +41,19 @@ func downloadFile(filepath string, url string) (err error) {
 	return nil
 }
 
-// DownloadImage takes a URL and a title and downloads the image into a specified path
-func DownloadImage(image, title string) {
-	filename := GetFilename(image, title)
+func imageFilename(imageLink string) string {
+	//Split by first delimeter
+	delimiter := "/"
+
+	tmpString := strings.Split(imageLink, delimiter)
+	length := len(tmpString)
+	newString := tmpString[length-1:]
+	return newString[0]
+}
+
+// DownloadImage takes a URL and downloads the image into a specified path
+func DownloadImage(image string) error {
+	filename := imageFilename(image)
 	filepath := constructImageFilePath(filename)
 	err := downloadFile(filepath, image)
 	if err != nil {
@@ -51,7 +62,7 @@ func DownloadImage(image, title string) {
 	// Open a test image.
 	src, err := imaging.Open(filepath)
 	if err != nil {
-		log.Fatalf("failed to open image: %v", err)
+		return fmt.Errorf("failed to open image %s: %v", filepath, err)
 	}
 
 	// Resize the cropped image to width = 224 preserving the aspect ratio.
@@ -65,6 +76,7 @@ func DownloadImage(image, title string) {
 		err = imaging.Save(destImage, filepath)
 	}
 	if err != nil {
-		log.Fatalf("failed to save image: %v", err)
+		return fmt.Errorf("failed to save image: %v", err)
 	}
+	return nil
 }

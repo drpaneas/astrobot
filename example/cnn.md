@@ -37,8 +37,6 @@ type News struct {
 	Link        string `json:"link"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
-	GreekTitle  string `json:"greektitle"`
-	GreekDesc   string `json:"greekdesc"`
 	Source      string `json:"source"`
 	ID          string `json:"id"`
 }

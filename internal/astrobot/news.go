@@ -3,6 +3,7 @@ package astrobot
 import (
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 
@@ -13,17 +14,18 @@ import (
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/gazzetta"
 	"github.com/drpaneas/astrobot/pkg/huffpost"
+	"github.com/drpaneas/astrobot/pkg/iefimerida"
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
 	"github.com/drpaneas/astrobot/pkg/protothema"
+	"github.com/drpaneas/astrobot/pkg/skai"
 	"github.com/drpaneas/astrobot/pkg/space"
 	"github.com/drpaneas/astrobot/pkg/sputniknews"
 	"github.com/drpaneas/astrobot/pkg/tanea"
 	"github.com/drpaneas/astrobot/pkg/tovima"
-	"github.com/drpaneas/astrobot/pkg/translate"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
 )
@@ -34,8 +36,6 @@ type News struct {
 	Link        string `json:"link"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
-	GreekTitle  string `json:"greektitle"`
-	GreekDesc   string `json:"greekdesc"`
 	Source      string `json:"source"`
 }
 
@@ -55,17 +55,13 @@ func GetCurrentNews() {
 	// Space.com
 	log.Println("space.GetNews()")
 	space.GetNews()
-	// log.Println("translate.NewsSpacego()")
-	// translate.NewsSpacego()
 	for _, v := range space.NewsDBSpace {
 		if v.Title == "" {
 			continue
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.GreekTitle,
 			Description: v.Description,
-			GreekDesc:   v.GreekDesc,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -75,17 +71,13 @@ func GetCurrentNews() {
 	// EarthSky
 	log.Println("earthsky.GetNews()")
 	earthsky.GetNews()
-	// log.Println("translate.NewsEarthSkygo()")
-	// translate.NewsEarthSkygo()
 	for _, v := range earthsky.NewsDBEarthSky {
 		if v.Title == "" {
 			continue
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.GreekTitle,
 			Description: v.Description,
-			GreekDesc:   v.GreekDesc,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -106,9 +98,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.GreekTitle,
 			Description: v.Description,
-			GreekDesc:   v.GreekDesc,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -124,9 +114,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -142,9 +130,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -159,9 +145,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -177,9 +161,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -194,9 +176,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -212,9 +192,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -230,9 +208,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -248,9 +224,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -266,9 +240,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -284,9 +256,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -302,9 +272,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -320,9 +288,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -338,9 +304,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -356,9 +320,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -374,9 +336,7 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -392,9 +352,38 @@ func GetCurrentNews() {
 		}
 		NewsDB = append(NewsDB, News{
 			Title:       v.Title,
-			GreekTitle:  v.Title,
 			Description: v.Description,
-			GreekDesc:   v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+	// iefimerida.gr
+	log.Println("iefimerida.GetNews()")
+	iefimerida.GetNews()
+	for _, v := range iefimerida.NewsDBiefimerida {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// skai.gr
+	log.Println("skai.GetNews()")
+	skai.GetNews()
+	for _, v := range skai.NewsDBskai {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
 			Link:        v.Link,
 			Image:       v.Image,
 			Source:      v.Source,
@@ -412,6 +401,19 @@ func IsTitleExistsInOldDB(title string) bool {
 	return false
 }
 
+func fixDesc(desc string) string {
+	var re = regexp.MustCompile(`(^|[^&])&#([0-9]){2};([a-z])(|$)`)
+	s := re.ReplaceAllString(desc, `$1`)
+	return s
+}
+
+func fixImageLink(link string) string {
+	if strings.Contains(link, "_.") {
+		link = strings.Replace(link, "_.", ".", -1)
+	}
+	return link
+}
+
 // HasAnyDifference returns true if NewsDB has newsposts which are not part of the OldDB
 // and puts them into DiffDB
 func HasAnyDifference() bool {
@@ -425,11 +427,9 @@ func HasAnyDifference() bool {
 			// Save the current new (which was posted before) into the DiffDB
 			DiffDB = append(DiffDB, News{
 				Title:       v.Title,
-				GreekTitle:  translate.TextToGreek(v.Title),
-				Description: v.Description,
-				GreekDesc:   translate.TextToGreek(v.Description),
+				Description: fixDesc(v.Description),
 				Link:        v.Link,
-				Image:       v.Image,
+				Image:       fixImageLink(v.Image),
 				Source:      v.Source,
 			})
 		}
@@ -455,6 +455,8 @@ func isGreek(source string) bool {
 		"gazzetta.gr",
 		"sputniknews.gr",
 		"news.gr",
+		"iefimerida.gr",
+		"skai.gr",
 	}
 	for _, v := range sources {
 		if source == v {
@@ -468,34 +470,22 @@ func isGreek(source string) bool {
 // CreateNewPosts writes news taken from DiffDB
 func CreateNewPosts() {
 	for _, v := range DiffDB {
-		filename := GetFilename(v.Image, v.Title)
-		if isGreek(v.Source) {
-			IsItUpToDate()
-			CheckoutMaster()
-			DownloadImage(v.Image, v.Title)
-			AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
-			if BuildFails() {
-				log.Println("FAILURE !!!!!!!!!!!!!!")
-				log.Printf("Problem is found at %v\n\n\n", v)
-				continue
-			}
-			GitAdd()
-			GitCommit()
-			GitPush("master")
-		} else {
-			t := time.Now()
-			timer := t.Format("20060102150405")
-			branch := fmt.Sprintf("news_%s", timer)
-			IsItUpToDate()
-			ChangeBranch(branch)
-
-			DownloadImage(v.Image, v.Title)
-			AddFile(v.GreekTitle, filename, v.Source, v.GreekDesc, v.Link)
-			GitAdd()
-			GitCommit()
-			GitPush(branch)
-			CheckoutMaster()
+		IsItUpToDate()
+		CheckoutMaster()
+		if DownloadImage(v.Image) != nil {
+			log.Println("FAILURE !!!!!!!!!!!!!!")
+			log.Printf("Problem is found at %v\n\n\n", v)
+			continue
 		}
+		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link)
+		if BuildFails() {
+			log.Println("FAILURE !!!!!!!!!!!!!!")
+			log.Printf("Problem is found at %v\n\n\n", v)
+			continue
+		}
+		GitAdd()
+		GitCommit()
+		GitPush("master")
 		wait := 5 * time.Second
 		log.Printf("\n -- Waiting %v seconds -- \n", wait)
 		time.Sleep(wait)

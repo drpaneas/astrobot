@@ -11,11 +11,15 @@ import (
 )
 
 const (
-	url string = "https://www.ert.gr/tag/diastima/"
+	url     string = "https://www.ert.gr/tag/diastima/"
+	urlESA  string = "https://www.ert.gr/tag/esa/"
+	urlNASA string = "https://www.ert.gr/tag/nasa/"
 )
 
-// Doc for Ert
-var Doc *goquery.Document = getHTML(url)
+// DocDiastima for Ert
+var docDiastima *goquery.Document = getHTML(url)
+var docEsa *goquery.Document = getHTML(urlESA)
+var docNasa *goquery.Document = getHTML(urlNASA)
 
 // NewsDBErt db with the news
 var NewsDBErt []News
@@ -26,8 +30,6 @@ type News struct {
 	Link        string `json:"link"`
 	Description string `json:"description"`
 	Image       string `json:"image"`
-	GreekTitle  string `json:"greektitle"`
-	GreekDesc   string `json:"greekdesc"`
 	Source      string `json:"source"`
 }
 
@@ -44,7 +46,59 @@ func GetNews() {
 	var desc string
 	var link string
 	var ok bool
-	Doc.Find("#td-outer-wrap > div.td-transition-content-and-menu.td-content-wrap > div:nth-child(2) > div > div > div.td-pb-span8.td-main-content > div > div").Each(func(i int, s *goquery.Selection) {
+	docDiastima.Find("#td-outer-wrap > div.td-transition-content-and-menu.td-content-wrap > div:nth-child(2) > div > div > div.td-pb-span8.td-main-content > div > div").Each(func(i int, s *goquery.Selection) {
+		s.Find("div.item-details > h3 > a").Each(func(i int, z *goquery.Selection) {
+			link, ok = z.Attr("href")
+			if ok {
+				title = z.Text()
+				s.Find("div.td-module-thumb > a > img").Each(func(i int, e *goquery.Selection) {
+					img, ok := e.Attr("src")
+					if ok {
+						image = img
+					}
+				})
+				s.Find("div.item-details > div.td-excerpt").Each(func(i int, w *goquery.Selection) {
+					desc = stripSpaces(w.Text())
+					desc = strings.Replace(desc, "\" ", "", -1)
+					desc = strings.Replace(desc, " \"", "", -1)
+				})
+				NewsDBErt = append(NewsDBErt, News{
+					Description: desc,
+					Image:       image,
+					Link:        link,
+					Title:       title,
+					Source:      "ert.gr",
+				})
+			}
+		})
+	})
+	docEsa.Find("#td-outer-wrap > div.td-transition-content-and-menu.td-content-wrap > div:nth-child(2) > div > div > div.td-pb-span8.td-main-content > div > div").Each(func(i int, s *goquery.Selection) {
+		s.Find("div.item-details > h3 > a").Each(func(i int, z *goquery.Selection) {
+			link, ok = z.Attr("href")
+			if ok {
+				title = z.Text()
+				s.Find("div.td-module-thumb > a > img").Each(func(i int, e *goquery.Selection) {
+					img, ok := e.Attr("src")
+					if ok {
+						image = img
+					}
+				})
+				s.Find("div.item-details > div.td-excerpt").Each(func(i int, w *goquery.Selection) {
+					desc = stripSpaces(w.Text())
+					desc = strings.Replace(desc, "\" ", "", -1)
+					desc = strings.Replace(desc, " \"", "", -1)
+				})
+				NewsDBErt = append(NewsDBErt, News{
+					Description: desc,
+					Image:       image,
+					Link:        link,
+					Title:       title,
+					Source:      "ert.gr",
+				})
+			}
+		})
+	})
+	docNasa.Find("#td-outer-wrap > div.td-transition-content-and-menu.td-content-wrap > div:nth-child(2) > div > div > div.td-pb-span8.td-main-content > div > div").Each(func(i int, s *goquery.Selection) {
 		s.Find("div.item-details > h3 > a").Each(func(i int, z *goquery.Selection) {
 			link, ok = z.Attr("href")
 			if ok {

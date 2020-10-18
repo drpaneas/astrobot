@@ -1,4 +1,4 @@
-package tovima
+package skai
 
 import (
 	"fmt"
@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	url string = "https://www.tovima.gr/tag/nasa"
+	url     string = "https://www.skai.gr/tags/astronomia"
+	baseURL string = "https://www.skai.gr"
 )
 
 func stripSpaces(s string) string {
@@ -21,11 +22,11 @@ func stripSpaces(s string) string {
 	return fmt.Sprintf("%q", str)
 }
 
-// Doc for tovima.gr
+// Doc for skai.gr
 var Doc *goquery.Document = getHTML(url)
 
-// NewsDBtovima db with the news
-var NewsDBtovima []News
+// NewsDBskai db with the news
+var NewsDBskai []News
 
 // News represent an news article
 type News struct {
@@ -42,56 +43,54 @@ func trimFirstRune(s string) string {
 	return s[i:]
 }
 
-// GetNews gets the news for ecozen.gr
+// GetNews gets the news for cnn.gr
 func GetNews() {
 	var title string
 	var image string
 	var desc string
 	var link string
+	var ok bool
 
-	linkQuery := fmt.Sprintf("#full-article-list > ul > li.modern-row.tablerow.mt_1 > div.mask-title.pos-rel > a")
-	Doc.Find(linkQuery).Each(func(i int, s *goquery.Selection) {
-		tmpLink, ok := s.Attr("href")
+	Doc.Find("body > div.dialog-off-canvas-main-canvas > main > div:nth-child(1) > div.categoryPinned.grid-x.grid-margin-x.medium-up-2.large-up-4 > div:nth-child(1) > div > div.cmnArticleTitlePad > a").Each(func(i int, s *goquery.Selection) {
+		link, ok = s.Attr("href")
 		if ok {
-			link = tmpLink
-			title = s.Text()
-			if string(title[0]) == " " {
-				title = trimFirstRune(title)
-			}
-			if strings.Contains(title, ":") {
-				tmpTitle := strings.Split(title, ":")
-				title = tmpTitle[1]
-				if string(title[0]) == " " {
-					title = trimFirstRune(title)
-				}
-			}
+			link = baseURL + link
+		}
+		title = s.Text()
+		if strings.Contains(title, "Αστρονομία") {
+			title = strings.Split(title, "Αστρονομία")[1]
+		}
+		re := regexp.MustCompile(`\r?\n`)
+		title = re.ReplaceAllString(title, " ")
+		if string(title[0]) == " " {
+			title = strings.TrimSpace(title)
 		}
 	})
 
-	doc := getHTML(link)
-	imageQuery := fmt.Sprintf("div.hentry > div.article-main.tablerow.fullwidth.pos-rel.flex-container > div.mainpost > div.image-container > a > img")
-	doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
-		image, _ = s.Attr("src")
+	imageQuery := fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > main > div:nth-child(1) > div.categoryPinned.grid-x.grid-margin-x.medium-up-2.large-up-4 > div:nth-child(1) > div > div.imgAligner > div > img")
+	Doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
+		tmpimage, _ := s.Attr("src")
+		tmp := strings.Split(tmpimage, "?")
+		image = baseURL + tmp[0]
 	})
-
-	descQuery := fmt.Sprintf("div.hentry > h2")
+	doc := getHTML(link)
+	descQuery := fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > div.jscroll2.jscroll > div > main > div > div.viewWithSideBar > article > div.mainInfo > p")
 	doc.Find(descQuery).Each(func(i int, s *goquery.Selection) {
 		desc = s.Text()
 		// Remove newlines
 		re := regexp.MustCompile(`\r?\n`)
 		desc = re.ReplaceAllString(desc, " ")
-		if string(desc[0]) == " " {
-			desc = trimFirstRune(desc)
+		if desc[0:1] == " " {
+			desc = strings.TrimSpace(desc)
 		}
 	})
-	NewsDBtovima = append(NewsDBtovima, News{
+	NewsDBskai = append(NewsDBskai, News{
 		Description: desc,
 		Image:       image,
 		Link:        link,
-		Source:      "tovima.gr",
+		Source:      "skai.gr",
 		Title:       title,
 	})
-
 }
 
 func getHTML(page string) (doc *goquery.Document) {
