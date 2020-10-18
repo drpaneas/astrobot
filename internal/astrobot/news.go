@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/drpaneas/astrobot/pkg/businessdaily"
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/ecozen"
@@ -440,6 +441,22 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// businessdaily.gr
+	log.Println("businessdaily.GetNews()")
+	businessdaily.GetNews()
+	for _, v := range businessdaily.NewsDBbusinessdaily {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
@@ -522,6 +539,7 @@ func isGreek(source string) bool {
 		"physicsgg.me",
 		"ethnos.gr",
 		"newsbomb.gr",
+		"businessdaily.gr",
 	}
 	for _, v := range sources {
 		if source == v {
