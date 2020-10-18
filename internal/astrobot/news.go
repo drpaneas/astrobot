@@ -11,6 +11,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/ecozen"
+	"github.com/drpaneas/astrobot/pkg/egno"
 	"github.com/drpaneas/astrobot/pkg/ert"
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/ethnos"
@@ -491,6 +492,22 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// egno.gr
+	log.Println("egno.GetNews()")
+	egno.GetNews()
+	for _, v := range egno.NewsDBegno {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
@@ -576,6 +593,7 @@ func isGreek(source string) bool {
 		"businessdaily.gr",
 		"pontos-news.gr",
 		"thermisnews.gr",
+		"egno.gr",
 	}
 	for _, v := range sources {
 		if source == v {
