@@ -152,7 +152,7 @@ func GetNews() {
 	docSpaceX.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
 		tmpimage, _ := s.Attr("src")
 		tmp := strings.Split(tmpimage, "?")
-		if !testURLReachable(tmp[0]) {
+		if !testURLReachable(tmpimage) {
 			image = baseURL + tmp[0]
 		} else {
 			image = tmp[0]

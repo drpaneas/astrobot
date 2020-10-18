@@ -103,9 +103,13 @@ func GetNews() {
 				individualDoc := getHTML(link)
 
 				// Image:
-				imageQuery := fmt.Sprintf("div.entry > div > a")
-				individualDoc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
-					image, _ = s.Attr("href")
+				individualDoc.Find("a[href]").Each(func(index int, item *goquery.Selection) {
+					href, _ := item.Attr("href")
+					if strings.Contains(href, ".png") {
+						image = href
+					} else if strings.Contains(href, ".jpg") {
+						image = href
+					}
 				})
 
 				// Description
