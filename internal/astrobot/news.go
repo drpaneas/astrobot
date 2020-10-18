@@ -20,6 +20,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
+	"github.com/drpaneas/astrobot/pkg/physicsgg"
 	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/skai"
 	"github.com/drpaneas/astrobot/pkg/space"
@@ -389,12 +390,38 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// physicsgg.me
+	log.Println("physicsgg.GetNews()")
+	physicsgg.GetNews()
+	for _, v := range physicsgg.NewsDBphysicsgg {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
 func IsTitleExistsInOldDB(title string) bool {
 	for _, v := range OldDB {
 		if title == v.Title {
+			return true
+		}
+	}
+	return false
+}
+
+// IsLinkExistsInOldDB returns true if link exists in OldDB
+func IsLinkExistsInOldDB(link string) bool {
+	for _, v := range OldDB {
+		if link == v.Link {
 			return true
 		}
 	}
@@ -419,7 +446,8 @@ func fixImageLink(link string) string {
 func HasAnyDifference() bool {
 	thereIsDiff := false
 	for _, v := range NewsDB {
-		if IsTitleExistsInOldDB(v.Title) {
+		// if IsTitleExistsInOldDB(v.Title) {
+		if IsLinkExistsInOldDB(v.Link) {
 			continue
 		} else {
 			fmt.Printf("Title: %s\nDescription: %s\nLink: %s\nImage: %s\n\n", v.Title, v.Description, v.Link, v.Image)
@@ -457,6 +485,7 @@ func isGreek(source string) bool {
 		"news.gr",
 		"iefimerida.gr",
 		"skai.gr",
+		"physicsgg.me",
 	}
 	for _, v := range sources {
 		if source == v {

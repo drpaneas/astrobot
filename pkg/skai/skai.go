@@ -25,6 +25,13 @@ func stripSpaces(s string) string {
 	return fmt.Sprintf("%q", str)
 }
 
+func testURLReachable(link string) bool {
+	if strings.Contains(link, "https://") {
+		return true
+	}
+	return false
+}
+
 // Doc for skai.gr
 var Doc *goquery.Document = getHTML(url)
 var docSpaceX *goquery.Document = getHTML(urlSpaceX)
@@ -94,7 +101,7 @@ func GetNews() {
 		title = fixTitle(title)
 		re := regexp.MustCompile(`\r?\n`)
 		title = re.ReplaceAllString(title, " ")
-		if string(title[0]) == " " {
+		if string(title[:0]) == " " {
 			title = strings.TrimSpace(title)
 		}
 	})
@@ -103,7 +110,10 @@ func GetNews() {
 	Doc.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
 		tmpimage, _ := s.Attr("src")
 		tmp := strings.Split(tmpimage, "?")
-		image = baseURL + tmp[0]
+		if !testURLReachable(image) {
+			image = baseURL + tmp[0]
+		}
+
 	})
 	doc := getHTML(link)
 	descQuery := fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > div.jscroll2.jscroll > div > main > div > div.viewWithSideBar > article > div.mainInfo > p")
@@ -142,7 +152,11 @@ func GetNews() {
 	docSpaceX.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
 		tmpimage, _ := s.Attr("src")
 		tmp := strings.Split(tmpimage, "?")
-		image = baseURL + tmp[0]
+		if !testURLReachable(tmp[0]) {
+			image = baseURL + tmp[0]
+		} else {
+			image = tmp[0]
+		}
 	})
 	docSpaceXdoc := getHTML(link)
 	descQuery = fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > div.jscroll2.jscroll > div > main > div > div.viewWithSideBar > article > div.mainInfo > p")
@@ -185,7 +199,9 @@ func GetNews() {
 	docDiastima.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
 		tmpimage, _ := s.Attr("src")
 		tmp := strings.Split(tmpimage, "?")
-		image = baseURL + tmp[0]
+		if !testURLReachable(image) {
+			image = baseURL + tmp[0]
+		}
 	})
 	docDiastimadoc := getHTML(link)
 	descQuery = fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > div.jscroll2.jscroll > div > main > div > div.viewWithSideBar > article > div.mainInfo > p")
@@ -229,7 +245,9 @@ func GetNews() {
 	docNasa.Find(imageQuery).Each(func(i int, s *goquery.Selection) {
 		tmpimage, _ := s.Attr("src")
 		tmp := strings.Split(tmpimage, "?")
-		image = baseURL + tmp[0]
+		if !testURLReachable(image) {
+			image = baseURL + tmp[0]
+		}
 	})
 	docNasadoc := getHTML(link)
 	descQuery = fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > div.jscroll2.jscroll > div > main > div > div.viewWithSideBar > article > div.mainInfo > p")
