@@ -30,6 +30,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/space"
 	"github.com/drpaneas/astrobot/pkg/sputniknews"
 	"github.com/drpaneas/astrobot/pkg/tanea"
+	"github.com/drpaneas/astrobot/pkg/thermis"
 	"github.com/drpaneas/astrobot/pkg/tovima"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
@@ -474,6 +475,22 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// thermisnews.gr
+	log.Println("thermis.GetNews()")
+	thermis.GetNews()
+	for _, v := range thermis.NewsDBthermis {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
@@ -558,6 +575,7 @@ func isGreek(source string) bool {
 		"newsbomb.gr",
 		"businessdaily.gr",
 		"pontos-news.gr",
+		"thermisnews.gr",
 	}
 	for _, v := range sources {
 		if source == v {
