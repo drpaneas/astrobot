@@ -24,6 +24,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/newsbomb"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
 	"github.com/drpaneas/astrobot/pkg/physicsgg"
+	"github.com/drpaneas/astrobot/pkg/pontosnews"
 	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/skai"
 	"github.com/drpaneas/astrobot/pkg/space"
@@ -457,6 +458,22 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// pontos-news.gr
+	log.Println("pontosnews.GetNews()")
+	pontosnews.GetNews()
+	for _, v := range pontosnews.NewsDBpontos {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
@@ -540,6 +557,7 @@ func isGreek(source string) bool {
 		"ethnos.gr",
 		"newsbomb.gr",
 		"businessdaily.gr",
+		"pontos-news.gr",
 	}
 	for _, v := range sources {
 		if source == v {
