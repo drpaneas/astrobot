@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/drpaneas/astrobot/pkg/alfavita"
 	"github.com/drpaneas/astrobot/pkg/businessdaily"
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
@@ -508,6 +509,22 @@ func GetCurrentNews() {
 			Source:      v.Source,
 		})
 	}
+
+	// alfavita.gr
+	log.Println("alfavita.GetNews()")
+	alfavita.GetNews()
+	for _, v := range alfavita.NewsDBalfavita {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
 }
 
 // IsTitleExistsInOldDB returns true if title exists in OldDB
@@ -594,6 +611,7 @@ func isGreek(source string) bool {
 		"pontos-news.gr",
 		"thermisnews.gr",
 		"egno.gr",
+		"alfavita.gr",
 	}
 	for _, v := range sources {
 		if source == v {
