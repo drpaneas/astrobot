@@ -18,6 +18,10 @@ const (
 	filenameDB string = "news.before"
 )
 
+var (
+	webhook = astrobot.GetWebhook()
+)
+
 func main() {
 	gitGoodState()
 
@@ -36,8 +40,8 @@ func main() {
 		log.Println("Diffing the two databases ...")
 		hasNews := astrobot.HasAnyDifference()
 		if hasNews {
-			astrobot.CreateNewPosts()   // Write the newposts
-			astrobot.SaveDBFile(dbFile) // Replace the dbFile with a new one
+			astrobot.CreateNewPosts(webhook) // Write the newposts
+			astrobot.SaveDBFile(dbFile)      // Replace the dbFile with a new one
 		} else {
 			log.Println("There 0 news since last time we checked")
 			os.Exit(0)

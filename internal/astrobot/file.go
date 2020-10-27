@@ -90,7 +90,7 @@ func fixTitle(title string) string {
 }
 
 // AddFile creates a new post content from the NewsDB and then it saves the file into the disk.
-func AddFile(title, image, source, description, link string) {
+func AddFile(title, image, source, description, link, webhook, imageLink string) {
 	currentTime := time.Now()
 	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02T15:04:05-07:00")) // ISO 8601 (RFC 3339)
 	title = fixTitle(title)
@@ -103,6 +103,14 @@ func AddFile(title, image, source, description, link string) {
 	}
 	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"%s\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, category, source, description, link)
 	writeFile(filepath, content)
+
+	err := postDiscord(webhook, link, title, description, imageLink)
+	if err != nil {
+		fmt.Printf("\n######### Error with Discord #########\n")
+		fmt.Printf("%v\n", err)
+	} else {
+		fmt.Printf("\nAll fine with Discord\n")
+	}
 }
 
 // FileExists reports whether the named file or directory exists.

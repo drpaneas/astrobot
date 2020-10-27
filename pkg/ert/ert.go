@@ -12,13 +12,11 @@ import (
 
 const (
 	url     string = "https://www.ert.gr/tag/diastima/"
-	urlESA  string = "https://www.ert.gr/tag/esa/"
 	urlNASA string = "https://www.ert.gr/tag/nasa/"
 )
 
 // DocDiastima for Ert
 var docDiastima *goquery.Document = getHTML(url)
-var docEsa *goquery.Document = getHTML(urlESA)
 var docNasa *goquery.Document = getHTML(urlNASA)
 
 // NewsDBErt db with the news
@@ -33,13 +31,23 @@ type News struct {
 	Source      string `json:"source"`
 }
 
+func articleDoesNotExists(link string) bool {
+	doesnotexists := true
+	for _, v := range NewsDBErt {
+		if link == v.Link {
+			doesnotexists = false
+		}
+	}
+	return doesnotexists
+}
+
 func stripSpaces(s string) string {
 	space := regexp.MustCompile(`\s+`)
 	str := space.ReplaceAllString(s, " ")
 	return fmt.Sprintf("%q", str)
 }
 
-// GetNews fetches the news of tanea.gr
+// GetNews fetches the news of ert.gr
 func GetNews() {
 	var title string
 	var image string
@@ -62,39 +70,15 @@ func GetNews() {
 					desc = strings.Replace(desc, "\" ", "", -1)
 					desc = strings.Replace(desc, " \"", "", -1)
 				})
-				NewsDBErt = append(NewsDBErt, News{
-					Description: desc,
-					Image:       image,
-					Link:        link,
-					Title:       title,
-					Source:      "ert.gr",
-				})
-			}
-		})
-	})
-	docEsa.Find("#td-outer-wrap > div.td-transition-content-and-menu.td-content-wrap > div:nth-child(2) > div > div > div.td-pb-span8.td-main-content > div > div").Each(func(i int, s *goquery.Selection) {
-		s.Find("div.item-details > h3 > a").Each(func(i int, z *goquery.Selection) {
-			link, ok = z.Attr("href")
-			if ok {
-				title = z.Text()
-				s.Find("div.td-module-thumb > a > img").Each(func(i int, e *goquery.Selection) {
-					img, ok := e.Attr("src")
-					if ok {
-						image = img
-					}
-				})
-				s.Find("div.item-details > div.td-excerpt").Each(func(i int, w *goquery.Selection) {
-					desc = stripSpaces(w.Text())
-					desc = strings.Replace(desc, "\" ", "", -1)
-					desc = strings.Replace(desc, " \"", "", -1)
-				})
-				NewsDBErt = append(NewsDBErt, News{
-					Description: desc,
-					Image:       image,
-					Link:        link,
-					Title:       title,
-					Source:      "ert.gr",
-				})
+				if len(NewsDBErt) <= 2 {
+					NewsDBErt = append(NewsDBErt, News{
+						Description: desc,
+						Image:       image,
+						Link:        link,
+						Title:       title,
+						Source:      "ert.gr",
+					})
+				}
 			}
 		})
 	})
@@ -114,13 +98,17 @@ func GetNews() {
 					desc = strings.Replace(desc, "\" ", "", -1)
 					desc = strings.Replace(desc, " \"", "", -1)
 				})
-				NewsDBErt = append(NewsDBErt, News{
-					Description: desc,
-					Image:       image,
-					Link:        link,
-					Title:       title,
-					Source:      "ert.gr",
-				})
+				if len(NewsDBErt) <= 5 {
+					if articleDoesNotExists(link) {
+						NewsDBErt = append(NewsDBErt, News{
+							Description: desc,
+							Image:       image,
+							Link:        link,
+							Title:       title,
+							Source:      "ert.gr",
+						})
+					}
+				}
 			}
 		})
 	})

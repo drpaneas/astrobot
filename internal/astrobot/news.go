@@ -36,6 +36,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/tovima"
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
+	"github.com/ecnepsnai/discord"
 )
 
 // News represent an news article
@@ -622,8 +623,27 @@ func isGreek(source string) bool {
 	return false
 }
 
+func postDiscord(webhook, link, title, desc, imageLink string) error {
+	var pic discord.Image
+	pic.URL = imageLink
+	discord.WebhookURL = webhook
+	err := discord.Post(discord.PostOptions{
+		// Content: text,
+		Embeds: []discord.Embed{
+			{
+				Color:       16777215,
+				URL:         link,
+				Title:       title,
+				Description: desc,
+				Thumbnail:   &pic,
+			},
+		},
+	})
+	return err
+}
+
 // CreateNewPosts writes news taken from DiffDB
-func CreateNewPosts() {
+func CreateNewPosts(webhook string) {
 	for _, v := range DiffDB {
 		IsItUpToDate()
 		CheckoutMaster()
@@ -632,7 +652,7 @@ func CreateNewPosts() {
 			log.Printf("Problem is found at %v\n\n\n", v)
 			continue
 		}
-		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link)
+		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link, webhook, v.Image)
 		if BuildFails() {
 			log.Println("FAILURE !!!!!!!!!!!!!!")
 			log.Printf("Problem is found at %v\n\n\n", v)
@@ -644,5 +664,7 @@ func CreateNewPosts() {
 		wait := 5 * time.Second
 		log.Printf("\n -- Waiting %v seconds -- \n", wait)
 		time.Sleep(wait)
+
+		fmt.Printf("Done\n")
 	}
 }

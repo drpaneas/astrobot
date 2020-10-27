@@ -69,6 +69,8 @@ github.com/disintegration/imaging v1.6.2 h1:w1LecBlG2Lnp8B3jk5zSuNqd7b4DXhcjwek1
 github.com/disintegration/imaging v1.6.2/go.mod h1:44/5580QXChDfwIclfc/PCwrr44amcmDAg8hxG0Ewe4=
 github.com/drpaneas/dudenetes v0.0.0-20191126154604-052aec30da5e h1:6xFoXgm2JWtJ55OVoEjedqif7MkmLSWxf57mWFFnuss=
 github.com/drpaneas/dudenetes v0.0.0-20191126154604-052aec30da5e/go.mod h1:GoXoJKT9he0AWvOZKqImevNPZHxpwhKNeLvTbc/Qsac=
+github.com/ecnepsnai/discord v1.2.0 h1:1hlKKOVpyNpdOuI5/QEGHMNhyCM5fKddyvEsPQk9BMc=
+github.com/ecnepsnai/discord v1.2.0/go.mod h1:oFhY+XzcLUuYSVBCDsupNH9o/t231TADNACDAFv7gac=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
