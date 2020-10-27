@@ -104,6 +104,10 @@ func GetNews() {
 		if string(title[:0]) == " " {
 			title = strings.TrimSpace(title)
 		}
+		title = strings.TrimSpace(title)
+		if strings.Contains(title, ": ") {
+			title = strings.Replace(title, ": ", "", -1)
+		}
 	})
 
 	imageQuery := fmt.Sprintf("body > div.dialog-off-canvas-main-canvas > main > div:nth-child(1) > div.categoryPinned.grid-x.grid-margin-x.medium-up-2.large-up-4 > div:nth-child(1) > div > div.imgAligner > div > img")
@@ -143,8 +147,12 @@ func GetNews() {
 		title = fixTitle(title)
 		re := regexp.MustCompile(`\r?\n`)
 		title = re.ReplaceAllString(title, " ")
-		if string(title[0]) == " " {
+		if string(title[:0]) == " " {
 			title = strings.TrimSpace(title)
+		}
+		title = strings.TrimSpace(title)
+		if strings.Contains(title, ": ") {
+			title = strings.Replace(title, ": ", "", -1)
 		}
 	})
 
@@ -190,8 +198,12 @@ func GetNews() {
 		title = fixTitle(title)
 		re := regexp.MustCompile(`\r?\n`)
 		title = re.ReplaceAllString(title, " ")
-		if string(title[0]) == " " {
+		if string(title[:0]) == " " {
 			title = strings.TrimSpace(title)
+		}
+		title = strings.TrimSpace(title)
+		if strings.Contains(title, ": ") {
+			title = strings.Replace(title, ": ", "", -1)
 		}
 	})
 
