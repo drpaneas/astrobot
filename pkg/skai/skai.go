@@ -66,7 +66,20 @@ func fixTitle(title string) string {
 	if strings.Contains(title, "Αστρονομία") {
 		title = strings.Split(title, "Αστρονομία")[1]
 	}
+	if strings.Contains(title, "(") {
+		title = strings.ReplaceAll(title, "(", "")
+	}
+	if strings.Contains(title, ")") {
+		title = strings.ReplaceAll(title, ")", "")
+	}
+	if strings.Contains(title, "/") {
+		title = strings.ReplaceAll(title, "/", "")
+	}
+	if strings.Contains(title, "__") {
+		title = strings.ReplaceAll(title, "__", "_")
+	}
 	return title
+
 }
 
 // Remove the first character of a string

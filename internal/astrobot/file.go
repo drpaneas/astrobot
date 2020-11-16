@@ -104,12 +104,15 @@ func AddFile(title, image, source, description, link, webhook, imageLink string)
 	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"%s\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, category, source, description, link)
 	writeFile(filepath, content)
 
-	err := postDiscord(webhook, link, title, description, imageLink)
-	if err != nil {
-		fmt.Printf("\n######### Error with Discord #########\n")
-		fmt.Printf("%v\n", err)
-	} else {
-		fmt.Printf("\nAll fine with Discord\n")
+	if source != "newsbomb.gr" && source != "sputniknews.gr" {
+		// Send to Astronio Community
+		err := postDiscord(webhook, link, title, description, imageLink, source)
+		if err != nil {
+			fmt.Printf("\n######### Error with Discord #########\n")
+			fmt.Printf("%v\n", err)
+		} else {
+			fmt.Printf("\nAll fine with Discord\n")
+		}
 	}
 }
 

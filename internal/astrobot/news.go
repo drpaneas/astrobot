@@ -22,6 +22,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
 	"github.com/drpaneas/astrobot/pkg/naftermporiki"
+	"github.com/drpaneas/astrobot/pkg/nasapicofday"
 	"github.com/drpaneas/astrobot/pkg/news247"
 	"github.com/drpaneas/astrobot/pkg/newsbomb"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
@@ -81,6 +82,22 @@ func GetCurrentNews() {
 	log.Println("earthsky.GetNews()")
 	earthsky.GetNews()
 	for _, v := range earthsky.NewsDBEarthSky {
+		if v.Title == "" {
+			continue
+		}
+		NewsDB = append(NewsDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// Nasa Picture of the day
+	log.Println("nasapicofday.GetNews()")
+	nasapicofday.GetNews()
+	for _, v := range nasapicofday.NewsDBNasaImage {
 		if v.Title == "" {
 			continue
 		}
@@ -623,22 +640,40 @@ func isGreek(source string) bool {
 	return false
 }
 
-func postDiscord(webhook, link, title, desc, imageLink string) error {
+func postDiscord(webhook, link, title, desc, imageLink, source string) error {
 	var pic discord.Image
 	pic.URL = imageLink
 	discord.WebhookURL = webhook
-	err := discord.Post(discord.PostOptions{
-		// Content: text,
-		Embeds: []discord.Embed{
-			{
-				Color:       16777215,
-				URL:         link,
-				Title:       title,
-				Description: desc,
-				Thumbnail:   &pic,
+	var err error
+	if source != "nasa.gov" {
+		err = discord.Post(discord.PostOptions{
+			// Content: text,
+			Embeds: []discord.Embed{
+				{
+					Color:       16777215,
+					URL:         link,
+					Title:       title,
+					Description: desc,
+					Thumbnail:   &pic,
+				},
 			},
-		},
-	})
+		})
+	} else {
+		// Σημαίνει είμαστε στην Φωτο της Ημέρεας
+		err = discord.Post(discord.PostOptions{
+			// Content: text,
+			Embeds: []discord.Embed{
+				{
+					Color:       16777215,
+					URL:         link,
+					Title:       "Η φωτογραφία της ημέρας: " + title,
+					Description: desc,
+					Image:       &pic,
+				},
+			},
+		})
+	}
+
 	return err
 }
 

@@ -51,9 +51,17 @@ func imageFilename(imageLink string) string {
 	return newString[0]
 }
 
+func removeQuote(filename string) string {
+	if strings.Contains(filename, "'") {
+		return strings.ReplaceAll(filename, "'", "-")
+	}
+	return filename
+}
+
 // DownloadImage takes a URL and downloads the image into a specified path
 func DownloadImage(image string) error {
 	filename := imageFilename(image)
+	filename = removeQuote(filename)
 	filepath := constructImageFilePath(filename)
 	err := downloadFile(filepath, image)
 	if err != nil {
