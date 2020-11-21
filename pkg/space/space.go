@@ -3,6 +3,7 @@ package space
 import (
 	"log"
 	"regexp"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/hashicorp/go-retryablehttp"
@@ -58,13 +59,15 @@ func GetNews() {
 					desc = desc[1:]
 				}
 			})
-			NewsDBSpace = append(NewsDBSpace, News{
-				Description: desc,
-				Image:       image,
-				Link:        link,
-				Title:       title,
-				Source:      "space.com",
-			})
+			if !strings.Contains(title, "Black Friday") {
+				NewsDBSpace = append(NewsDBSpace, News{
+					Description: desc,
+					Image:       image,
+					Link:        link,
+					Title:       title,
+					Source:      "space.com",
+				})
+			}
 		}
 	})
 
