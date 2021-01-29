@@ -98,6 +98,8 @@ func CheckoutMaster() {
 	timeout := 5
 	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
+	fmt.Println("Running the command: " + cmd + " at the directory: " + directory)
+	fmt.Println("The output is: ", output)
 	if err != nil {
 		log.Fatal(err)
 	}

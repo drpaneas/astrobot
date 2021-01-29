@@ -17,7 +17,6 @@ import (
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/ethnos"
 	"github.com/drpaneas/astrobot/pkg/gazzetta"
-	"github.com/drpaneas/astrobot/pkg/huffpost"
 	"github.com/drpaneas/astrobot/pkg/iefimerida"
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
@@ -338,20 +337,20 @@ func GetCurrentNews() {
 	}
 
 	// huffingtonpost.gr
-	log.Println("huffpost.GetNews()")
-	huffpost.GetNews()
-	for _, v := range huffpost.NewsDBhuffingtonpost {
-		if v.Title == "" {
-			continue
-		}
-		NewsDB = append(NewsDB, News{
-			Title:       v.Title,
-			Description: v.Description,
-			Link:        v.Link,
-			Image:       v.Image,
-			Source:      v.Source,
-		})
-	}
+	// log.Println("huffpost.GetNews()")
+	// huffpost.GetNews()
+	// for _, v := range huffpost.NewsDBhuffingtonpost {
+	// 	if v.Title == "" {
+	// 		continue
+	// 	}
+	// 	NewsDB = append(NewsDB, News{
+	// 		Title:       v.Title,
+	// 		Description: v.Description,
+	// 		Link:        v.Link,
+	// 		Image:       v.Image,
+	// 		Source:      v.Source,
+	// 	})
+	// }
 
 	// esquire.com.gr
 	log.Println("esquire.GetNews()")
@@ -604,7 +603,7 @@ func HasAnyDifference() bool {
 
 func isGreek(source string) bool {
 	sources := [...]string{
-		"huffingtonpost.gr",
+		// "huffingtonpost.gr", Disable because of GET  request failed: Get "": unsupported protocol scheme ""
 		"ecozen.gr",
 		"news247.gr",
 		"in.gr",
@@ -681,7 +680,9 @@ func postDiscord(webhook, link, title, desc, imageLink, source string) error {
 func CreateNewPosts(webhook string) {
 	for _, v := range DiffDB {
 		IsItUpToDate()
+		fmt.Println("Before checkout")
 		CheckoutMaster()
+		fmt.Println("After checkout")
 		if DownloadImage(v.Image) != nil {
 			log.Println("FAILURE !!!!!!!!!!!!!!")
 			log.Printf("Problem is found at %v\n\n\n", v)

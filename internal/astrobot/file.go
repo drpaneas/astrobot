@@ -80,6 +80,12 @@ func fixTitle(title string) string {
 	if strings.Contains(title, "\"") {
 		title = strings.ReplaceAll(title, "\"", "")
 	}
+	if strings.Contains(title, "/") {
+		title = strings.ReplaceAll(title, "/", "")
+	}
+	if strings.Contains(title, "\\") {
+		title = strings.ReplaceAll(title, "\\", "")
+	}
 	if strings.Contains(title, "«") {
 		title = strings.ReplaceAll(title, "«", "")
 	}
