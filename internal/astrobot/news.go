@@ -35,6 +35,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // News represent an news article
@@ -806,6 +807,7 @@ func CreateNewPosts() {
 
 func PostToDiscord(webhook string) {
 	for _, v := range TestedDB {
+		time.Sleep(10 * time.Second) // Περίμενε γιατί αν είναι πολλά τα νέα, παίζει να φας ban απο τον server για spam
 		if v.Source != "newsbomb.gr" && v.Source != "sputniknews.gr" {
 			// Send to Discord Community
 			err := postDiscord(webhook, v.Link, v.Title, v.Description, v.Image, v.Source)
