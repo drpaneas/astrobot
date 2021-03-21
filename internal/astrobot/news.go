@@ -592,7 +592,7 @@ func HasAnyDifference() bool {
 		// fmt.Printf("NewDB[%d].Link: %s\nCheck if this exists in OldDB\n",i, v.Link)
 		// if IsTitleExistsInOldDB(v.Title) {
 		if IsLinkExistsInOldDB(v.Link) {
-			fmt.Printf("Ignoring '%s' -- already exists in OldDB\n.", v.Title)
+			fmt.Printf("Ignoring '%s' -- already exists in OldDB\n", v.Title)
 			continue
 		} else {
 			fmt.Println("There is difference between OldDB and NewDB. This is one of the new elements:")
