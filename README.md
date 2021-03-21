@@ -3,5 +3,8 @@
 How to run:
 
 ```shell
-GOOGLE_APPLICATION_CREDENTIALS="/Users/drpaneas/astrobot-292108-ef3c25cdff54.json" ./astrobot
+sudo DEBIAN_FRONTEND=noninteractive apt-get -yq install hugo
+export WEBHOOK_DISCORD="https://discordapp.com/api/webhooks/bleep/blop"
+export REPO_PATH=/Users/drpaneas/github/starlordgr
+./astrobot
 ```

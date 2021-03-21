@@ -11,22 +11,34 @@ import (
 	"time"
 )
 
-const (
-	postEnglishFilePath string = "/Users/drpaneas/github/starlordgr/content/english/post/"
-	postGreekFilePath   string = "/Users/drpaneas/github/starlordgr/content/greek/post/"
+var (
+	postEnglishFilePath = GetRepoPath() + "/content/english/post/"
+	postGreekFilePath  = GetRepoPath() + "/content/greek/post/"
+	imagesFilepath  = GetRepoPath() + "/static/images/post/"
+	directory = GetRepoPath()
 )
+
+func GetRepoPath() string {
+	repoPath, present := os.LookupEnv("REPO_PATH")
+	fmt.Println(repoPath)
+	if !present {
+		log.Fatal("REPO_PATH env variable does NOT exists")
+		os.Exit(1)
+	}
+	return repoPath
+}
 
 // GetFilename takes a URL as input and a name. It returns the filename with the extension.
 func GetFilename(downloadLink, title string) string {
 	extension := filepath.Ext(downloadLink)
-	title = strings.ReplaceAll(title, " ", "_") // Replace space with underscore
-	title = strings.ReplaceAll(title, ",", "_") // Replace comma with underscore
-	title = strings.ReplaceAll(title, "&", "_") // Replace & with underscore
-	title = strings.ReplaceAll(title, "!", "_") // Replace ! with underscore
-	title = strings.ReplaceAll(title, "-", "_") // Replace - with underscore
-	title = strings.ReplaceAll(title, ":", "_") // Replace : with underscore
-	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
-	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
+	title = strings.ReplaceAll(title, " ", "")  // Replace space with underscore
+	title = strings.ReplaceAll(title, ",", "")  // Replace comma with underscore
+	title = strings.ReplaceAll(title, "&", "")  // Replace & with underscore
+	title = strings.ReplaceAll(title, "!", "")  // Replace ! with underscore
+	title = strings.ReplaceAll(title, "-", "")  // Replace - with underscore
+	title = strings.ReplaceAll(title, ":", "")  // Replace : with underscore
+	title = strings.ReplaceAll(title, "?", "")  // Replace ? with underscore
+	title = strings.ReplaceAll(title, ";", "")  // Replace ; with underscore
 	title = strings.ReplaceAll(title, "\"", "") // Replace \ with underscore
 	title = strings.ReplaceAll(title, "#", "")  // Replace # with underscore
 
@@ -34,15 +46,31 @@ func GetFilename(downloadLink, title string) string {
 	return filename
 }
 
+// FixImageFilename fixes the image filaname
+// func FixImageFilename(image string) string {
+// 	image = strings.ReplaceAll(image, " ", "") // Replace space with underscore
+// 	image = strings.ReplaceAll(image, ",", "") // Replace comma with underscore
+// 	image = strings.ReplaceAll(image, "&", "") // Replace & with underscore
+// 	image = strings.ReplaceAll(image, "!", "") // Replace ! with underscore
+// 	//image = strings.ReplaceAll(image, "-", "_") // Replace - with underscore
+// 	image = strings.ReplaceAll(image, ":", "")  // Replace : with underscore
+// 	image = strings.ReplaceAll(image, "?", "")  // Replace ? with underscore
+// 	image = strings.ReplaceAll(image, ";", "")  // Replace ; with underscore
+// 	image = strings.ReplaceAll(image, "\"", "") // Replace \ with underscore
+// 	image = strings.ReplaceAll(image, "#", "")  // Replace # with underscore
+// 	image = strings.ReplaceAll(image, "?", "")  // Replace # with underscore
+// 	return image
+// }
+
 func constructFilenamePost(title string) string {
-	title = strings.ReplaceAll(title, " ", "_") // Replace space with underscore
-	title = strings.ReplaceAll(title, ",", "_") // Replace comma with underscore
-	title = strings.ReplaceAll(title, "&", "_") // Replace & with underscore
-	title = strings.ReplaceAll(title, "!", "_") // Replace ! with underscore
-	title = strings.ReplaceAll(title, "-", "_") // Replace - with underscore
-	title = strings.ReplaceAll(title, ":", "_") // Replace : with underscore
-	title = strings.ReplaceAll(title, "?", "_") // Replace ? with underscore
-	title = strings.ReplaceAll(title, ";", "_") // Replace ; with underscore
+	title = strings.ReplaceAll(title, " ", "")  // Replace space with underscore
+	title = strings.ReplaceAll(title, ",", "")  // Replace comma with underscore
+	title = strings.ReplaceAll(title, "&", "")  // Replace & with underscore
+	title = strings.ReplaceAll(title, "!", "")  // Replace ! with underscore
+	title = strings.ReplaceAll(title, "-", "")  // Replace - with underscore
+	title = strings.ReplaceAll(title, ":", "")  // Replace : with underscore
+	title = strings.ReplaceAll(title, "?", "")  // Replace ? with underscore
+	title = strings.ReplaceAll(title, ";", "")  // Replace ; with underscore
 	title = strings.ReplaceAll(title, "\"", "") // Replace \ with underscore
 	title = strings.ReplaceAll(title, "#", "")  // Replace # with underscore
 	return title + ".md"
@@ -92,34 +120,25 @@ func fixTitle(title string) string {
 	if strings.Contains(title, "»") {
 		title = strings.ReplaceAll(title, "»", "")
 	}
+	if strings.Contains(title, "#") {
+		title = strings.ReplaceAll(title, "#", "")
+	}
+	if strings.Contains(title, ":") {
+		title = strings.ReplaceAll(title, ":", "")
+	}
 	return title
 }
 
-// AddFile creates a new post content from the NewsDB and then it saves the file into the disk.
-func AddFile(title, image, source, description, link, webhook, imageLink string) {
+// AddFile creates a new post content from the NewDB and then it saves the file into the disk.
+func AddFile(title, image, source, description, link, imageLink, filepath string) {
 	currentTime := time.Now()
 	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02T15:04:05-07:00")) // ISO 8601 (RFC 3339)
-	title = fixTitle(title)
-	filename := constructFilenamePost(title)
-	filepath := constructEnglishPostFilePath(filename)
 	category := "News"
 	if isGreek(source) {
-		filepath = constructGreekPostFilePath(filename)
 		category = "Ειδήσεις"
 	}
 	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"%s\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, category, source, description, link)
 	writeFile(filepath, content)
-
-	if source != "newsbomb.gr" && source != "sputniknews.gr" {
-		// Send to Astronio Community
-		err := postDiscord(webhook, link, title, description, imageLink, source)
-		if err != nil {
-			fmt.Printf("\n######### Error with Discord #########\n")
-			fmt.Printf("%v\n", err)
-		} else {
-			fmt.Printf("\nAll fine with Discord\n")
-		}
-	}
 }
 
 // FileExists reports whether the named file or directory exists.
@@ -128,6 +147,7 @@ func FileExists(name string) bool {
 		if os.IsNotExist(err) {
 			return false
 		}
+		return false
 	}
 	return true
 }
@@ -135,19 +155,17 @@ func FileExists(name string) bool {
 // GetFileDBPath returns the DB File exact path given its filename
 func GetFileDBPath(filename string) string {
 	// Find the homedir and create the file
-	dbFileNameBefore := "news.before"
-	home, err := os.UserHomeDir()
+	pwd, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("couldn't find the $HOME directory\nError: %s", err)
-
+		log.Fatalf("couldn't get the $PWD directory\nError: %s", err)
 	}
-	dbFile := home + "/" + dbFileNameBefore
+	dbFile := pwd + "/" + filename
 	return dbFile
 }
 
-// SaveDBFile saves the NewsDB into the hard disk (that is dbFile location)
+// SaveDBFile saves the TestedDB into the hard disk (that is dbFile location)
 func SaveDBFile(dbFile string) {
-	fileJSON, err := json.Marshal(NewsDB)
+	fileJSON, err := json.Marshal(TestedDB)
 	if err != nil {
 		log.Fatal("Couldn't encode to JSON")
 	}

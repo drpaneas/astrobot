@@ -2,18 +2,12 @@ package astrobot
 
 import (
 	"fmt"
-	"log"
-	"regexp"
-	"strings"
-	"time"
-
 	"github.com/drpaneas/astrobot/pkg/alfavita"
 	"github.com/drpaneas/astrobot/pkg/businessdaily"
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
 	"github.com/drpaneas/astrobot/pkg/ecozen"
 	"github.com/drpaneas/astrobot/pkg/egno"
-	"github.com/drpaneas/astrobot/pkg/ert"
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/ethnos"
 	"github.com/drpaneas/astrobot/pkg/gazzetta"
@@ -37,6 +31,10 @@ import (
 	"github.com/drpaneas/astrobot/pkg/unboxholics"
 	"github.com/drpaneas/astrobot/pkg/universetoday"
 	"github.com/ecnepsnai/discord"
+	"log"
+	"os"
+	"regexp"
+	"strings"
 )
 
 // News represent an news article
@@ -48,8 +46,8 @@ type News struct {
 	Source      string `json:"source"`
 }
 
-// NewsDB is the list of news
-var NewsDB []News
+// NewDB is the list of news
+var NewDB []News
 
 // OldDB is the list of old news
 var OldDB []News
@@ -57,9 +55,12 @@ var OldDB []News
 // DiffDB is the diff between the two
 var DiffDB []News
 
-// GetCurrentNews fetches current news into the NewsDB database
+// TestedDB contains the good news (after test) taken from DiffDB
+var TestedDB []News
+
+// GetCurrentNews fetches current news into the NewDB database
 func GetCurrentNews() {
-	log.Println("Saving new newsposts in NewsDB ...")
+	log.Println("Saving new newsposts in NewDB ...")
 
 	// Space.com
 	log.Println("space.GetNews()")
@@ -68,7 +69,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -84,7 +85,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -100,7 +101,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -121,7 +122,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -137,7 +138,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -153,7 +154,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -168,7 +169,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -184,7 +185,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -199,7 +200,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -215,7 +216,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -231,7 +232,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -241,20 +242,20 @@ func GetCurrentNews() {
 	}
 
 	// ert.gr
-	log.Println("ert.GetNews()")
-	ert.GetNews()
-	for _, v := range ert.NewsDBErt {
-		if v.Title == "" {
-			continue
-		}
-		NewsDB = append(NewsDB, News{
-			Title:       v.Title,
-			Description: v.Description,
-			Link:        v.Link,
-			Image:       v.Image,
-			Source:      v.Source,
-		})
-	}
+	// log.Println("ert.GetNews()")
+	// ert.GetNews()
+	// for _, v := range ert.NewsDBErt {
+	// 	if v.Title == "" {
+	// 		continue
+	// 	}
+	// 	NewDB = append(NewDB, News{
+	// 		Title:       v.Title,
+	// 		Description: v.Description,
+	// 		Link:        v.Link,
+	// 		Image:       v.Image,
+	// 		Source:      v.Source,
+	// 	})
+	// }
 
 	// in.gr
 	log.Println("in.GetNews()")
@@ -263,7 +264,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -279,7 +280,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -295,7 +296,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -311,7 +312,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -327,7 +328,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -343,7 +344,7 @@ func GetCurrentNews() {
 	// 	if v.Title == "" {
 	// 		continue
 	// 	}
-	// 	NewsDB = append(NewsDB, News{
+	// 	NewDB = append(NewDB, News{
 	// 		Title:       v.Title,
 	// 		Description: v.Description,
 	// 		Link:        v.Link,
@@ -359,7 +360,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -375,7 +376,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -390,7 +391,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -406,7 +407,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -422,7 +423,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -438,7 +439,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -454,7 +455,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -470,7 +471,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -486,7 +487,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -502,7 +503,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -518,7 +519,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -534,7 +535,7 @@ func GetCurrentNews() {
 		if v.Title == "" {
 			continue
 		}
-		NewsDB = append(NewsDB, News{
+		NewDB = append(NewDB, News{
 			Title:       v.Title,
 			Description: v.Description,
 			Link:        v.Link,
@@ -577,15 +578,16 @@ func fixImageLink(link string) string {
 	return link
 }
 
-// HasAnyDifference returns true if NewsDB has newsposts which are not part of the OldDB
+// HasAnyDifference returns true if NewDB has newsposts which are not part of the OldDB
 // and puts them into DiffDB
 func HasAnyDifference() bool {
 	thereIsDiff := false
-	for _, v := range NewsDB {
+	for _, v := range NewDB {
 		// if IsTitleExistsInOldDB(v.Title) {
 		if IsLinkExistsInOldDB(v.Link) {
 			continue
 		} else {
+			fmt.Println("There is difference between OldDB and NewDB. This is one of the new elements:")
 			fmt.Printf("Title: %s\nDescription: %s\nLink: %s\nImage: %s\n\n", v.Title, v.Description, v.Link, v.Image)
 			thereIsDiff = true // flag we gonna have new stuff today
 			// Save the current new (which was posted before) into the DiffDB
@@ -632,7 +634,6 @@ func isGreek(source string) bool {
 	}
 	for _, v := range sources {
 		if source == v {
-			log.Printf("%s is a Greek site. Push directly to master branch.", v)
 			return true
 		}
 	}
@@ -676,31 +677,144 @@ func postDiscord(webhook, link, title, desc, imageLink, source string) error {
 	return err
 }
 
-// CreateNewPosts writes news taken from DiffDB
-func CreateNewPosts(webhook string) {
+// TestNewPosts tests news taken from DiffDB
+func TestNewPosts() {
 	for _, v := range DiffDB {
-		IsItUpToDate()
-		fmt.Println("Before checkout")
-		CheckoutMaster()
-		fmt.Println("After checkout")
-		if DownloadImage(v.Image) != nil {
-			log.Println("FAILURE !!!!!!!!!!!!!!")
-			log.Printf("Problem is found at %v\n\n\n", v)
-			continue
-		}
-		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link, webhook, v.Image)
-		if BuildFails() {
-			log.Println("FAILURE !!!!!!!!!!!!!!")
-			log.Printf("Problem is found at %v\n\n\n", v)
-			continue
-		}
-		GitAdd()
-		GitCommit()
-		GitPush("master")
-		wait := 5 * time.Second
-		log.Printf("\n -- Waiting %v seconds -- \n", wait)
-		time.Sleep(wait)
+		//IsItUpToDate()
+		//fmt.Println("Before checkout")
+		//CheckoutMaster()
+		//fmt.Println("After checkout")
+		// Αν το συγκεκριμένο νέο έχει πρόβλημα με την εικόνα, προσπέρασέ το
 
-		fmt.Printf("Done\n")
+		imageFilepath := constructImageFilePath(removeQuote(imageFilename(v.Image)))
+
+		fmt.Println("--- Testing Image ---")
+		fmt.Println("Link: " + v.Image)
+		fmt.Println("Save To: " + imageFilepath)
+		imageAlreadyPreExists := false // e.g. το σιτε χρησιμοποιεί την ίδια εικόνα σε διάφορες ειδήσεις
+		if FileExists(imageFilepath) {
+			fmt.Println("The image already exists! Do not download it again ...")
+			imageAlreadyPreExists = true
+		} else {
+			if DownloadImage(v.Image, imageFilepath) != nil {
+				log.Println("FAILURE with Downloading the Image: ", v.Image)
+				log.Printf("Problem is found at %v\n", v)
+				log.Printf("Skipping this news %v\n\n\n", v.Link)
+				// Δεν ήταν καλή η φωτογραφία της είδησης. Διέγραψε το αρχείο
+				os.Remove(imageFilepath)
+				continue
+			}
+		}
+
+		// Πρόσθεσε το νέο ειδησιογραφικό αρχείο και τέσταρέ το
+		title := fixTitle(v.Title)
+		filename := constructFilenamePost(title)
+		filepath := constructEnglishPostFilePath(filename)
+		if isGreek(v.Source) {
+			filepath = constructGreekPostFilePath(filename)
+		}
+		fmt.Println("--- Testing Adding File ---")
+		fmt.Println("File: " + filepath)
+		if FileExists(filepath) {
+			fmt.Println("The file already exists! Skipping ...")
+			continue
+		}
+		AddFile(v.Title, imageFilepath, v.Source, v.Description, v.Link, v.Image, filepath)
+
+		fmt.Println("--- Testing Building File ---")
+		if BuildFails() {
+			log.Println("FAILURE during building the file !!!!!!!!!!!!!!")
+			log.Printf("Problem is found at %v\n", v)
+			log.Printf("Skipping this specific new article %v\n\n\n", v.Link)
+			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο και την εικόνα
+			os.Remove(filepath)
+			if !imageAlreadyPreExists {
+				os.Remove(imageFilepath)	// ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
+			}
+			continue
+		}
+
+		// Αφαιρεσε το άρθρο, όπως και να χει γιατι αυτο ήταν απλά ένα τεστ
+		if !imageAlreadyPreExists {
+			os.Remove(imageFilepath)	// ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
+		}
+		os.Remove(filepath)
+
+		// Η είδηση πέρασε όλα τα τεστ, θεωρείται πλέον αξιόπιστη για push
+		TestedDB = append(TestedDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+
+		//GitAdd()
+		//GitCommit()
+		//GitPush("master")
+		// wait := 5 * time.Second
+		// log.Printf("\n -- Waiting %v seconds -- \n", wait)
+		// time.Sleep(wait)
+
+		fmt.Printf("Testing is Done\n")
+	}
+}
+
+// CreateNewPosts writes news taken from TestedDB
+func CreateNewPosts() {
+	for i, v := range TestedDB {
+		// Αν το συγκεκριμένο νέο έχει πρόβλημα με την εικόνα, προσπέρασέ το
+		imageFilepath := constructImageFilePath(removeQuote(imageFilename(v.Image)))
+		imageAlreadyPreExists := false // e.g. το σιτε χρησιμοποιεί την ίδια εικόνα σε διάφορες ειδήσεις
+		if FileExists(imageFilepath) {
+			fmt.Println("The image already exists! Do not download it again ...")
+			imageAlreadyPreExists = true
+		} else {
+			if DownloadImage(v.Image, imageFilepath) != nil {
+				log.Println("FAILURE with Downloading the Image: ", v.Image)
+				log.Printf("Problem is found at %v\n", v)
+				log.Printf("Skipping this news %v\n\n\n", v.Link)
+				// Δεν ήταν καλή η φωτογραφία της είδησης. Διέγραψε το αρχείο
+				os.Remove(imageFilepath)
+				continue
+			}
+		}
+
+		// Πρόσθεσε το νέο ειδησιογραφικό αρχείο και τέσταρέ το
+		title := fixTitle(v.Title)
+		filename := constructFilenamePost(title)
+		filepath := constructEnglishPostFilePath(filename)
+		if isGreek(v.Source) {
+			filepath = constructGreekPostFilePath(filename)
+		}
+		AddFile(v.Title, imageFilepath, v.Source, v.Description, v.Link, v.Image, filepath)
+		if BuildFails() {
+			log.Println("FAILURE during building the file !!!!!!!!!!!!!!")
+			log.Printf("Problem is found at %v\n", v)
+			log.Printf("Skipping this specific new article %v\n\n\n", v.Link)
+			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο
+			if !imageAlreadyPreExists {
+				os.Remove(imageFilepath)	// ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
+			}
+			os.Remove(filepath)
+			continue
+		}
+		fmt.Printf("Added %d out of %d\n", i+1, len(TestedDB))
+	}
+	fmt.Printf("Adding all files is Done\n")
+}
+
+func PostToDiscord(webhook string) {
+	for _, v := range TestedDB {
+		if v.Source != "newsbomb.gr" && v.Source != "sputniknews.gr" {
+			// Send to Discord Community
+			err := postDiscord(webhook, v.Link, v.Title, v.Description, v.Image, v.Source)
+			if err != nil {
+				fmt.Printf("\n######### Error with Discord #########\n")
+				fmt.Printf("%v\n", err)
+			} else {
+				fmt.Printf("\nDiscord successfully sent: %s\n", v.Title)
+			}
+		}
 	}
 }

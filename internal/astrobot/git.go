@@ -13,7 +13,6 @@ func ChangeBranch(branch string) {
 	cmd := fmt.Sprintf("git checkout -b %s", branch)
 	log.Println("Running: ", cmd)
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		CheckoutMaster()
@@ -30,7 +29,6 @@ func IsItUpToDate() (answer bool) {
 	answer = false
 	cmd := "git pull origin master"
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		CheckoutMaster()
@@ -47,7 +45,6 @@ func GitAdd() {
 	log.Println("Running git add .")
 	cmd := "git add ."
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		branch, _ := run.SlowCmdDir("git --no-pager log -1", timeout, directory)
@@ -64,7 +61,6 @@ func GitCommit() {
 	cmd := "git commit -a --allow-empty-message -m ''"
 	log.Println("Running: ", cmd)
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		branch, _ := run.SlowCmdDir("git --no-pager log -1", timeout, directory)
@@ -81,7 +77,6 @@ func GitPush(branch string) {
 	cmd := fmt.Sprintf("git push origin %s", branch)
 	log.Println("Running: ", cmd)
 	timeout := 10
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		branch, _ := run.SlowCmdDir("git --no-pager log -1", timeout, directory)
@@ -96,7 +91,6 @@ func CheckoutMaster() {
 	log.Println("Checking out at master branch")
 	cmd := "git checkout master"
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	fmt.Println("Running the command: " + cmd + " at the directory: " + directory)
 	fmt.Println("The output is: ", output)
@@ -111,7 +105,6 @@ func DeleteBranch(branch string) {
 	cmd := fmt.Sprintf("git branch -D %s", branch)
 	log.Println("Running: ", cmd)
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		log.Fatal(err)
@@ -124,7 +117,6 @@ func gitResetHardHead() {
 	cmd := "git reset --hard HEAD"
 	log.Println("Running: ", cmd)
 	timeout := 5
-	directory := "/Users/drpaneas/github/starlordgr"
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		log.Fatal(err)

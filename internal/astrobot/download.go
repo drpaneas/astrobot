@@ -11,7 +11,6 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-var imagesFilepath string = "/Users/drpaneas/github/starlordgr/static/images/post/"
 
 func constructImageFilePath(filename string) string {
 	return imagesFilepath + filename
@@ -59,10 +58,7 @@ func removeQuote(filename string) string {
 }
 
 // DownloadImage takes a URL and downloads the image into a specified path
-func DownloadImage(image string) error {
-	filename := imageFilename(image)
-	filename = removeQuote(filename)
-	filepath := constructImageFilePath(filename)
+func DownloadImage(image, filepath string) error {
 	err := downloadFile(filepath, image)
 	if err != nil {
 		log.Println(err)
