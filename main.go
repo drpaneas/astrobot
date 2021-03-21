@@ -47,13 +47,13 @@ func main() {
 			astrobot.TestNewPosts() // Test the newposts
 			fmt.Println("----- FINISHED TESTING ------")
 			fmt.Println("----- START ADDING FILES ------")
-			// astrobot.CreateNewPosts() // Write the newposts
+			astrobot.CreateNewPosts() // Write the newposts
 			fmt.Println("----- FINISH ADDING FILES ------")
 			fmt.Println("----- START SENDING DISCORD MESSAGES ------")
 			astrobot.PostToDiscord(webhook) // Push messages to the discord room
 			fmt.Println("----- FINISH SENDING DISCORD MESSAGES ------")
 			fmt.Println("----- START REPLACING THE OLDDB WITH THE TESTEDDB ------")
-			// astrobot.SaveDBFile(dbFile)      // Replace the dbFile with a new one
+			astrobot.SaveDBFile(dbFile)      // Replace the dbFile with a new one
 			fmt.Println("----- FINISHED REPLACING THE OLDDB WITH THE TESTEDDB ------")
 		} else {
 			log.Println("There 0 news since last time we checked")
