@@ -52,9 +52,9 @@ func main() {
 			fmt.Println("----- START SENDING DISCORD MESSAGES ------")
 			astrobot.PostToDiscord(webhook) // Push messages to the discord room
 			fmt.Println("----- FINISH SENDING DISCORD MESSAGES ------")
-			fmt.Println("----- START REPLACING THE OLDDB WITH THE TESTEDDB ------")
+			fmt.Println("----- START REPLACING THE OLDDB WITH THE NewDB ------")
 			astrobot.SaveDBFile(dbFile)      // Replace the dbFile with a new one
-			fmt.Println("----- FINISHED REPLACING THE OLDDB WITH THE TESTEDDB ------")
+			fmt.Println("----- FINISHED REPLACING THE OLDDB WITH THE NewDB ------")
 		} else {
 			log.Println("There 0 news since last time we checked")
 			os.Exit(0)
@@ -65,7 +65,7 @@ func main() {
 		// If the fileDB doesn't exist, fetch the news into NewDB
 		astrobot.GetCurrentNews()
 
-		// Encode NewDB contents in JSON format and save them into dbFile
+		// Append TestedDB contents in JSON format and save them into dbFile
 		astrobot.SaveDBFile(dbFile)
 	}
 }

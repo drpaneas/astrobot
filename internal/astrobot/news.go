@@ -558,11 +558,15 @@ func IsTitleExistsInOldDB(title string) bool {
 
 // IsLinkExistsInOldDB returns true if link exists in OldDB
 func IsLinkExistsInOldDB(link string) bool {
-	for _, v := range OldDB {
+	for _ , v := range OldDB {
+		// fmt.Printf("OldDB[%d].Link: %s\n",i,v.Link)
 		if link == v.Link {
+			// fmt.Println("This is old news. We just found it.")
 			return true
 		}
+		// fmt.Println("Try another OldDB element.")
 	}
+	// fmt.Println("Couldn't find the same link in OldDB. This looks like fresh news!")
 	return false
 }
 
@@ -583,9 +587,12 @@ func fixImageLink(link string) string {
 // and puts them into DiffDB
 func HasAnyDifference() bool {
 	thereIsDiff := false
+	fmt.Printf("OldDB has %d news\nNewDB has %d news\n", len(OldDB), len(NewDB))
 	for _, v := range NewDB {
+		// fmt.Printf("NewDB[%d].Link: %s\nCheck if this exists in OldDB\n",i, v.Link)
 		// if IsTitleExistsInOldDB(v.Title) {
 		if IsLinkExistsInOldDB(v.Link) {
+			fmt.Printf("Ignoring '%s' -- already exists in OldDB\n.", v.Title)
 			continue
 		} else {
 			fmt.Println("There is difference between OldDB and NewDB. This is one of the new elements:")

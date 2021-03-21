@@ -19,5 +19,14 @@ func readDBFile(dbFile string) []byte {
 func JSONtoOldDB(dbFile string) {
 	log.Println("Saving previous newsposts into OldDB ...")
 	fileJSON := readDBFile(dbFile)
-	json.Unmarshal(fileJSON, &OldDB)
+	err := json.Unmarshal(fileJSON, &OldDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//for i:=0; i< len(OldDB); i++ {
+	//	fmt.Println(OldDB[i].Link)
+	//}
+	//for i, v := range OldDB {
+	//	log.Printf("OldDB[%d].Link: %s\n",i,v.Link)
+	//}
 }

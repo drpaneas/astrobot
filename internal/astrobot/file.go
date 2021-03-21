@@ -161,9 +161,15 @@ func GetFileDBPath(filename string) string {
 	return dbFile
 }
 
-// SaveDBFile saves the TestedDB into the hard disk (that is dbFile location)
+// SaveDBFile saves the NewDB into the hard disk (that is dbFile location)
 func SaveDBFile(dbFile string) {
-	fileJSON, err := json.Marshal(TestedDB)
+	// Append OldDB with the new added stuff
+	for _, v := range NewDB {
+		OldDB = append(OldDB,v)
+	}
+
+	// The OldDB is now bigger
+	fileJSON, err := json.Marshal(OldDB)
 	if err != nil {
 		log.Fatal("Couldn't encode to JSON")
 	}
