@@ -10,7 +10,7 @@ import (
 func BuildFails() bool {
 	cmd := "hugo --gc --themesDir themes"
 	log.Println("Running: ", cmd)
-	timeout := 10
+	timeout := 60
 	output, err := run.SlowCmdDir(cmd, timeout, directory)
 	if err != nil {
 		log.Println(err)
