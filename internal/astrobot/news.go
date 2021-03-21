@@ -689,8 +689,8 @@ func TestNewPosts() {
 		imageFilepath := constructImageFilePath(removeQuote(imageFilename(v.Image)))
 
 		fmt.Println("--- Testing Image ---")
-		fmt.Println("Link: " + v.Image)
-		fmt.Println("Save To: " + imageFilepath)
+		fmt.Println("Link: " + v.Image)	// e.g.  https://www.universetoday.com/wp-content/uploads/2021/03/jpegPIA24483.width-1600.jpg
+		fmt.Println("Save To: " + imageFilepath) // e.g. /home/runner/work/starlordgr/starlordgr/website/static/images/post/jpegPIA24483.width-1600.jpg
 		imageAlreadyPreExists := false // e.g. το σιτε χρησιμοποιεί την ίδια εικόνα σε διάφορες ειδήσεις
 		if FileExists(imageFilepath) {
 			fmt.Println("The image already exists! Do not download it again ...")
@@ -719,7 +719,7 @@ func TestNewPosts() {
 			fmt.Println("The file already exists! Skipping ...")
 			continue
 		}
-		AddFile(v.Title, imageFilepath, v.Source, v.Description, v.Link, v.Image, filepath)
+		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link, v.Image, filepath)
 
 		fmt.Println("--- Testing Building File ---")
 		if BuildFails() {
@@ -787,7 +787,7 @@ func CreateNewPosts() {
 		if isGreek(v.Source) {
 			filepath = constructGreekPostFilePath(filename)
 		}
-		AddFile(v.Title, imageFilepath, v.Source, v.Description, v.Link, v.Image, filepath)
+		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link, v.Image, filepath)
 		if BuildFails() {
 			log.Println("FAILURE during building the file !!!!!!!!!!!!!!")
 			log.Printf("Problem is found at %v\n", v)

@@ -154,12 +154,10 @@ func FileExists(name string) bool {
 
 // GetFileDBPath returns the DB File exact path given its filename
 func GetFileDBPath(filename string) string {
-	// Find the homedir and create the file
-	pwd, err := os.Getwd()
-	if err != nil {
-		log.Fatalf("couldn't get the $PWD directory\nError: %s", err)
+	dbFile := directory + "/" + filename
+	if !FileExists(dbFile) {
+		log.Fatalf("The file %s cannot be found!\n", dbFile)
 	}
-	dbFile := pwd + "/" + filename
 	return dbFile
 }
 
