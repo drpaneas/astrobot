@@ -162,11 +162,15 @@ func GetFileDBPath(filename string) string {
 }
 
 // SaveDBFile saves the NewDB into the hard disk (that is dbFile location)
+// I use NewDB because I don't want to retest the problematic new articles every time the CI gets triggered
 func SaveDBFile(dbFile string) {
 	// Append OldDB with the new added stuff
 	for _, v := range NewDB {
 		OldDB = append(OldDB,v)
 	}
+
+	// Remove duplicates if any
+	OldDB = uniqueDB(OldDB)
 
 	// The OldDB is now bigger
 	fileJSON, err := json.Marshal(OldDB)
@@ -177,4 +181,16 @@ func SaveDBFile(dbFile string) {
 	if err != nil {
 		log.Fatalf("Couldn't update the db file %s\nError: %s", dbFile, err)
 	}
+}
+
+func uniqueDB(NewSlice []News) []News {
+	keys := make(map[News]bool)
+	var list []News
+	for _, entry := range NewSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
 }
