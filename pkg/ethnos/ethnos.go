@@ -2,7 +2,6 @@ package ethnos
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -12,10 +11,10 @@ import (
 )
 
 const (
-	url           string = "https://www.ethnos.gr/diastima"
-	urlAstronomia string = "https://www.ethnos.gr/astronomia"
-	baseURL       string = "https://www.ethnos.gr"
-	urlNASA       string = "https://www.ethnos.gr/nasa"
+	url           string = "https://ethnos.gr/diastima"
+	urlAstronomia string = "https://ethnos.gr/astronomia"
+	baseURL       string = "https://ethnos.gr"
+	urlNASA       string = "https://ethnos.gr/nasa"
 )
 
 func stripSpaces(s string) string {
@@ -240,17 +239,17 @@ func getHTML(page string) (doc *goquery.Document) {
 	// Request the HTML page.
 	res, err := standardClient.Get(page)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Errorf("couldn't load the page %s, because of error: %q", page, err)
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
-		log.Fatalf("status code error: %d %s", res.StatusCode, res.Status)
+		fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
 	}
 
 	// Load the HTML document
 	doc, err = goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Errorf("cannot load HTML doc: %q", err)
 	}
 	return doc
 }
