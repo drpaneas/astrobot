@@ -20,7 +20,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/newsbomb"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
 	"github.com/drpaneas/astrobot/pkg/physicsgg"
-	"github.com/drpaneas/astrobot/pkg/pontosnews"
+	// "github.com/drpaneas/astrobot/pkg/pontosnews" disabled
 	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/skai"
 	"github.com/drpaneas/astrobot/pkg/space"
@@ -482,20 +482,20 @@ func GetCurrentNews() {
 	}
 
 	// pontos-news.gr
-	log.Println("pontosnews.GetNews()")
-	pontosnews.GetNews()
-	for _, v := range pontosnews.NewsDBpontos {
-		if v.Title == "" {
-			continue
-		}
-		NewDB = append(NewDB, News{
-			Title:       v.Title,
-			Description: v.Description,
-			Link:        v.Link,
-			Image:       v.Image,
-			Source:      v.Source,
-		})
-	}
+	// log.Println("pontosnews.GetNews()")
+	// pontosnews.GetNews()
+	// for _, v := range pontosnews.NewsDBpontos {
+	//	if v.Title == "" {
+	//		continue
+	//	}
+	//	NewDB = append(NewDB, News{
+	//		Title:       v.Title,
+	//		Description: v.Description,
+	//		Link:        v.Link,
+	//		Image:       v.Image,
+	//		Source:      v.Source,
+	//	})
+	// }
 
 	// thermisnews.gr
 	log.Println("thermis.GetNews()")
@@ -635,7 +635,7 @@ func isGreek(source string) bool {
 		"ethnos.gr",
 		"newsbomb.gr",
 		"businessdaily.gr",
-		"pontos-news.gr",
+	//	"pontos-news.gr",   Disable because of dead website (expired hosting)
 		"thermisnews.gr",
 		"egno.gr",
 		"alfavita.gr",
