@@ -10,7 +10,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/egno"
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/ethnos"
-	"github.com/drpaneas/astrobot/pkg/gazzetta"
+//	"github.com/drpaneas/astrobot/pkg/gazzetta"
 	"github.com/drpaneas/astrobot/pkg/iefimerida"
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
@@ -323,20 +323,20 @@ func GetCurrentNews() {
 	}
 
 	// gazzetta.gr
-	log.Println("gazzetta.GetNews()")
-	gazzetta.GetNews()
-	for _, v := range gazzetta.NewsDBgazzetta {
-		if v.Title == "" {
-			continue
-		}
-		NewDB = append(NewDB, News{
-			Title:       v.Title,
-			Description: v.Description,
-			Link:        v.Link,
-			Image:       v.Image,
-			Source:      v.Source,
-		})
-	}
+	//log.Println("gazzetta.GetNews()")
+	//gazzetta.GetNews()
+	//for _, v := range gazzetta.NewsDBgazzetta {
+	//	if v.Title == "" {
+	//		continue
+	//	}
+	//	NewDB = append(NewDB, News{
+	//		Title:       v.Title,
+	//		Description: v.Description,
+	//		Link:        v.Link,
+	//		Image:       v.Image,
+	//		Source:      v.Source,
+	//	})
+	//}
 
 	// huffingtonpost.gr
 	// log.Println("huffpost.GetNews()")
