@@ -3,6 +3,7 @@ package astrobot
 import (
 	"fmt"
 	"github.com/drpaneas/astrobot/pkg/alfavita"
+	"github.com/drpaneas/astrobot/pkg/astronio"
 	"github.com/drpaneas/astrobot/pkg/businessdaily"
 	"github.com/drpaneas/astrobot/pkg/cnn"
 	"github.com/drpaneas/astrobot/pkg/earthsky"
@@ -136,6 +137,22 @@ func GetCurrentNews() {
 	log.Println("unboxholics.GetNews()")
 	unboxholics.GetNews()
 	for _, v := range unboxholics.NewsDBUnboxholics {
+		if v.Title == "" {
+			continue
+		}
+		NewDB = append(NewDB, News{
+			Title:       v.Title,
+			Description: v.Description,
+			Link:        v.Link,
+			Image:       v.Image,
+			Source:      v.Source,
+		})
+	}
+
+	// Astronio.gr
+	log.Println("astronio.GetNews()")
+	unboxholics.GetNews()
+	for _, v := range astronio.NewsDBastronio {
 		if v.Title == "" {
 			continue
 		}
