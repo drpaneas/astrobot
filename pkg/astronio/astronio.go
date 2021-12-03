@@ -84,6 +84,7 @@ func GetNews() {
 			re := regexp.MustCompile(`\r?\n`)
 			title = re.ReplaceAllString(title, " ")
 			title = strings.TrimSpace(title)
+			title = replaceGreekRunes(title)
 			NewsDBastronio[i].Title = title
 		})
 
@@ -92,6 +93,7 @@ func GetNews() {
 		doc.Find(descQuery).Each(func(p int, u *goquery.Selection) {
 			desc = u.Text()
 			desc = strings.TrimSpace(desc)
+			desc = replaceGreekRunes(desc)
 			NewsDBastronio[i].Description = desc
 		})
 
@@ -100,6 +102,7 @@ func GetNews() {
 			doc.Find(descQuery).Each(func(p int, u *goquery.Selection) {
 				desc = u.Text()
 				desc = strings.TrimSpace(desc)
+				desc = replaceGreekRunes(desc)
 				NewsDBastronio[i].Description = desc
 			})
 		}
@@ -129,4 +132,37 @@ func getHTML(page string) (doc *goquery.Document) {
 		log.Fatal(err)
 	}
 	return doc
+}
+
+
+func replaceGreekRunes(title string) string {
+	if strings.Contains(title, "“") {
+		title = strings.ReplaceAll(title, "“", "")
+	}
+	if strings.Contains(title, "”") {
+		title = strings.ReplaceAll(title, "”", "")
+	}
+	if strings.Contains(title, "\"") {
+		fmt.Println("\"", title)
+		title = strings.ReplaceAll(title, "\"", "")
+	}
+	if strings.Contains(title, "/") {
+		title = strings.ReplaceAll(title, "/", "")
+	}
+	if strings.Contains(title, "\\") {
+		title = strings.ReplaceAll(title, "\\", "")
+	}
+	if strings.Contains(title, "«") {
+		title = strings.ReplaceAll(title, "«", "")
+	}
+	if strings.Contains(title, "»") {
+		title = strings.ReplaceAll(title, "»", "")
+	}
+	if strings.Contains(title, "#") {
+		title = strings.ReplaceAll(title, "#", "")
+	}
+	if strings.Contains(title, ":") {
+		title = strings.ReplaceAll(title, ":", "")
+	}
+	return title
 }
