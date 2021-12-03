@@ -614,8 +614,10 @@ func HasAnyDifference() bool {
 			fmt.Printf("Ignoring '%s' -- already exists in OldDB\n", v.Title)
 			continue
 		} else {
+			fmt.Println("----")
 			fmt.Println("There is difference between OldDB and NewDB. This is one of the new elements:")
-			fmt.Printf("Title: %s\nDescription: %s\nLink: %s\nImage: %s\n\n", v.Title, v.Description, v.Link, v.Image)
+			fmt.Printf("Title: %s\nDescription: %s\nLink: %s\nImage: %s\n\n", v.Title, fixDesc(v.Description), v.Link, fixImageLink(v.Image))
+			fmt.Println("----")
 			thereIsDiff = true // flag we gonna have new stuff today
 			// Save the current new (which was posted before) into the DiffDB
 			DiffDB = append(DiffDB, News{
