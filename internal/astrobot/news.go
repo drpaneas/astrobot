@@ -11,7 +11,9 @@ import (
 	"github.com/drpaneas/astrobot/pkg/egno"
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/ethnos"
-//	"github.com/drpaneas/astrobot/pkg/gazzetta"
+	"github.com/drpaneas/dudenetes/pkg/run"
+
+	//	"github.com/drpaneas/astrobot/pkg/gazzetta"
 	"github.com/drpaneas/astrobot/pkg/iefimerida"
 	"github.com/drpaneas/astrobot/pkg/in"
 	"github.com/drpaneas/astrobot/pkg/maxmag"
@@ -719,7 +721,7 @@ func TestNewPosts() {
 		fmt.Println("Save To: " + imageFilepath) // e.g. /home/runner/work/starlordgr/starlordgr/website/static/images/post/jpegPIA24483.width-1600.jpg
 		imageAlreadyPreExists := false // e.g. το σιτε χρησιμοποιεί την ίδια εικόνα σε διάφορες ειδήσεις
 		if FileExists(imageFilepath) {
-			fmt.Println("The image already exists! Do not download it again ...")
+			fmt.Printf("The image %v already exists! Do not download it again ...\n",imageFilepath)
 			imageAlreadyPreExists = true
 		} else {
 			if DownloadImage(v.Image, imageFilepath) != nil {
@@ -751,6 +753,12 @@ func TestNewPosts() {
 		if BuildFails() {
 			log.Println("FAILURE during building the file !!!!!!!!!!!!!!")
 			log.Printf("Problem is found at %v\n", v)
+
+			cmd := fmt.Sprintf("cat %v", filepath)
+			log.Println("Running: ", cmd)
+			timeout := 60
+			output, _ := run.SlowCmdDir(cmd, timeout, directory)
+			log.Println(output)
 			log.Printf("Skipping this specific new article %v\n\n\n", v.Link)
 			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο και την εικόνα
 			os.Remove(filepath)
@@ -817,6 +825,11 @@ func CreateNewPosts() {
 		if BuildFails() {
 			log.Println("FAILURE during building the file !!!!!!!!!!!!!!")
 			log.Printf("Problem is found at %v\n", v)
+			cmd := fmt.Sprintf("cat %v", filepath)
+			log.Println("Running: ", cmd)
+			timeout := 60
+			output, _ := run.SlowCmdDir(cmd, timeout, directory)
+			log.Println(output)
 			log.Printf("Skipping this specific new article %v\n\n\n", v.Link)
 			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο
 			if !imageAlreadyPreExists {
