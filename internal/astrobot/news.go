@@ -151,7 +151,7 @@ func GetCurrentNews() {
 
 	// Astronio.gr
 	log.Println("astronio.GetNews()")
-	unboxholics.GetNews()
+	astronio.GetNews()
 	for _, v := range astronio.NewsDBastronio {
 		if v.Title == "" {
 			continue
