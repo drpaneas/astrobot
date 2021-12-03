@@ -652,10 +652,11 @@ func isGreek(source string) bool {
 		"ethnos.gr",
 		"newsbomb.gr",
 		"businessdaily.gr",
-	//	"pontos-news.gr",   Disable because of dead website (expired hosting)
+		"pontos-news.gr",
 		"thermisnews.gr",
 		"egno.gr",
 		"alfavita.gr",
+		"astronio.gr",
 	}
 	for _, v := range sources {
 		if source == v {
