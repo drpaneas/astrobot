@@ -751,15 +751,17 @@ func TestNewPosts() {
 
 		fmt.Println("--- Testing Building File ---")
 		if BuildFails() {
-			log.Println("FAILURE during building the file !!!!!!!!!!!!!!")
+			log.Println("FAILURE during Testing building file !!!!!!!!!!!!!!")
+			log.Println("meaning --> 'hugo --gc --themesDir themes' command has failed")
 			log.Printf("Problem is found at %v\n", v)
-
 			cmd := fmt.Sprintf("cat %v", filepath)
 			log.Println("Running: ", cmd)
 			timeout := 60
 			output, _ := run.SlowCmdDir(cmd, timeout, directory)
+			log.Println("----------------------------------------")
 			log.Println(output)
-			log.Printf("Skipping this specific new article %v\n\n\n", v.Link)
+			log.Println("----------------------------------------")
+			log.Printf("Skipping this specific new article. Delete the file and the image %v\n\n\n", v.Link)
 			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο και την εικόνα
 			os.Remove(filepath)
 			if !imageAlreadyPreExists {
