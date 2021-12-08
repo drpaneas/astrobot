@@ -51,22 +51,22 @@ func GetNews() {
 	var ok bool
 
 	Doc.Find("#main > div > ul > li > article > div > a").Each(func(i int, s *goquery.Selection) {
-		// Get the link
 		link, ok = s.Attr("href")
 		if ok {
-			if !testURLReachable(link) {
-				link = baseURL + link
-			}
+					if !testURLReachable(link) {
+						link = baseURL + link
+					}
 
-			// From the link, get the Thumbnail
-			image, _ = s.Attr("data-bgset")
+					image, _ = s.Attr("data-bgset")
 
-			// Update the Astronews News DB
-			NewsDBastronio = append(NewsDBastronio, News{
-				Link:        link,
-				Source:      "astronio.gr",
-			})
-		}
+					NewsDBastronio = append(NewsDBastronio, News{
+						Description: desc,
+						Image:       image,
+						Link:        link,
+						Source:      "astronio.gr",
+						Title:       title,
+					})
+				}
 	})
 
 	// For every item in the Astronews News DB, get the Title and the first paragraph for the desc.
