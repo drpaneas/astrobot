@@ -23,7 +23,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/newsbomb"
 	"github.com/drpaneas/astrobot/pkg/newsgr"
 	"github.com/drpaneas/astrobot/pkg/physicsgg"
-	// "github.com/drpaneas/astrobot/pkg/pontosnews" disabled
+	//"github.com/drpaneas/astrobot/pkg/pontosnews"
 	"github.com/drpaneas/astrobot/pkg/protothema"
 	"github.com/drpaneas/astrobot/pkg/skai"
 	"github.com/drpaneas/astrobot/pkg/space"
@@ -31,7 +31,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/tanea"
 	"github.com/drpaneas/astrobot/pkg/thermis"
 	"github.com/drpaneas/astrobot/pkg/tovima"
-	"github.com/drpaneas/astrobot/pkg/unboxholics"
+	//"github.com/drpaneas/astrobot/pkg/unboxholics" disabled
 	"github.com/drpaneas/astrobot/pkg/universetoday"
 	"github.com/ecnepsnai/discord"
 	"log"
@@ -136,20 +136,20 @@ func GetCurrentNews() {
 	}
 
 	// Unoboxholics
-	log.Println("unboxholics.GetNews()")
-	unboxholics.GetNews()
-	for _, v := range unboxholics.NewsDBUnboxholics {
-		if v.Title == "" {
-			continue
-		}
-		NewDB = append(NewDB, News{
-			Title:       v.Title,
-			Description: v.Description,
-			Link:        v.Link,
-			Image:       v.Image,
-			Source:      v.Source,
-		})
-	}
+	//log.Println("unboxholics.GetNews()")
+	//unboxholics.GetNews()
+	//for _, v := range unboxholics.NewsDBUnboxholics {
+	//	if v.Title == "" {
+	//		continue
+	//	}
+	//	NewDB = append(NewDB, News{
+	//		Title:       v.Title,
+	//		Description: v.Description,
+	//		Link:        v.Link,
+	//		Image:       v.Image,
+	//		Source:      v.Source,
+	//	})
+	//}
 
 	// Astronio.gr
 	log.Println("astronio.GetNews()")
