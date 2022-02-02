@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -13,9 +14,9 @@ import (
 
 var (
 	postEnglishFilePath = GetRepoPath() + "/content/english/post/"
-	postGreekFilePath  = GetRepoPath() + "/content/greek/post/"
-	imagesFilepath  = GetRepoPath() + "/static/images/post/"
-	directory = GetRepoPath()
+	postGreekFilePath   = GetRepoPath() + "/content/greek/post/"
+	imagesFilepath      = GetRepoPath() + "/static/images/post/"
+	directory           = GetRepoPath()
 )
 
 func GetRepoPath() string {
@@ -76,25 +77,34 @@ func constructFilenamePost(title string) string {
 	return title + ".md"
 }
 
-func writeFile(fullfilepath, content string) {
+func writeFile(fullfilepath, content string) error {
 	fmt.Println(fullfilepath)
+	dir := path.Dir(fullfilepath)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil { // Use MkdirAll to simulate mkdir -p
+			log.Panicf("I couldn't create the directory to save the markdown files: %v", err)
+		} else {
+			fmt.Println("Directory to save markdown files has been created:", dir)
+		}
+	}
 	f, err := os.Create(fullfilepath)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Println("Error with os.Create:", err)
+		return err
 	}
 	l, err := f.WriteString(content)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error with f.WriteString:", err)
 		f.Close()
-		return
+		return err
 	}
 	fmt.Println(l, "bytes written successfully")
 	err = f.Close()
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Println("Error with f.Close: ", err)
+		return err
 	}
+	return nil
 }
 
 func constructEnglishPostFilePath(filename string) string {
@@ -130,7 +140,7 @@ func fixTitle(title string) string {
 }
 
 // AddFile creates a new post content from the NewDB and then it saves the file into the disk.
-func AddFile(title, image, source, description, link, imageLink, filepath string) {
+func AddFile(title, image, source, description, link, imageLink, filepath string) error {
 	currentTime := time.Now()
 	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02T15:04:05-07:00")) // ISO 8601 (RFC 3339)
 	category := "News"
@@ -138,7 +148,12 @@ func AddFile(title, image, source, description, link, imageLink, filepath string
 		category = "Ειδήσεις"
 	}
 	content := fmt.Sprintf("---\ntitle: \"%s\"\ndate: %s\nimages:\n  - \"images/post/%s\"\nauthor: \"AstroBot\"\ncategories: [\"%s\"]\ntags: [\"%s\"]\ndraft: false\n---\n\n%s\n\nΔιαβάστε περισσότερα: %s\n", title, date, image, category, source, description, link)
-	writeFile(filepath, content)
+	if err := writeFile(filepath, content); err != nil {
+		fmt.Println("Failed to writeFile() -- cannot save the markdown file to disk")
+		return err
+	}
+	fmt.Println("Markdown file has been saved to disk!")
+	return nil
 }
 
 // FileExists reports whether the named file or directory exists.
@@ -166,7 +181,7 @@ func GetFileDBPath(filename string) string {
 func SaveDBFile(dbFile string) {
 	// Append OldDB with the new added stuff
 	for _, v := range NewDB {
-		OldDB = append(OldDB,v)
+		OldDB = append(OldDB, v)
 	}
 
 	// Remove duplicates if any

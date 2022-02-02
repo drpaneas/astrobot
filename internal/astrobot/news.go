@@ -12,6 +12,7 @@ import (
 	"github.com/drpaneas/astrobot/pkg/esquire"
 	"github.com/drpaneas/astrobot/pkg/ethnos"
 	"github.com/drpaneas/dudenetes/pkg/run"
+	"path"
 
 	//	"github.com/drpaneas/astrobot/pkg/gazzetta"
 	"github.com/drpaneas/astrobot/pkg/iefimerida"
@@ -577,7 +578,7 @@ func IsTitleExistsInOldDB(title string) bool {
 
 // IsLinkExistsInOldDB returns true if link exists in OldDB
 func IsLinkExistsInOldDB(link string) bool {
-	for _ , v := range OldDB {
+	for _, v := range OldDB {
 		// fmt.Printf("OldDB[%d].Link: %s\n",i,v.Link)
 		if link == v.Link {
 			// fmt.Println("This is old news. We just found it.")
@@ -719,11 +720,20 @@ func TestNewPosts() {
 		imageFilepath := constructImageFilePath(removeQuote(imageFilename(v.Image)))
 
 		fmt.Println("--- Testing Image ---")
-		fmt.Println("Link: " + v.Image)	// e.g.  https://www.universetoday.com/wp-content/uploads/2021/03/jpegPIA24483.width-1600.jpg
+		fmt.Println("Link: " + v.Image) // e.g.  https://www.universetoday.com/wp-content/uploads/2021/03/jpegPIA24483.width-1600.jpg
+		dir := path.Dir(imageFilepath)
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			if err := os.MkdirAll(dir, os.ModePerm); err != nil { // Use MkdirAll to simulate mkdir -p
+				log.Panicf("I couldn't create the directory to save the images: %v", err)
+			} else {
+				fmt.Println("Directory to save images has been created:", dir)
+
+			}
+		}
 		fmt.Println("Save To: " + imageFilepath) // e.g. /home/runner/work/starlordgr/starlordgr/website/static/images/post/jpegPIA24483.width-1600.jpg
-		imageAlreadyPreExists := false // e.g. το σιτε χρησιμοποιεί την ίδια εικόνα σε διάφορες ειδήσεις
+		imageAlreadyPreExists := false           // e.g. το σιτε χρησιμοποιεί την ίδια εικόνα σε διάφορες ειδήσεις
 		if FileExists(imageFilepath) {
-			fmt.Printf("The image %v already exists! Do not download it again ...\n",imageFilepath)
+			fmt.Printf("The image %v already exists! Do not download it again ...\n", imageFilepath)
 			imageAlreadyPreExists = true
 		} else {
 			if DownloadImage(v.Image, imageFilepath) != nil {
@@ -740,6 +750,15 @@ func TestNewPosts() {
 		title := fixTitle(v.Title)
 		filename := constructFilenamePost(title)
 		filepath := constructEnglishPostFilePath(filename)
+		dir2 := path.Dir(filepath)
+		if _, err := os.Stat(dir2); os.IsNotExist(err) {
+			if err := os.MkdirAll(dir, os.ModePerm); err != nil { // Use MkdirAll to simulate mkdir -p
+				log.Panicf("I couldn't create the directory to sae the markdown file: %v", err)
+			} else {
+				fmt.Println("Directory to save the markdown has been created:", dir2)
+
+			}
+		}
 		if isGreek(v.Source) {
 			filepath = constructGreekPostFilePath(filename)
 		}
@@ -749,7 +768,11 @@ func TestNewPosts() {
 			fmt.Println("The file already exists! Skipping ...")
 			continue
 		}
-		AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link, v.Image, filepath)
+
+		if err := AddFile(v.Title, imageFilename(v.Image), v.Source, v.Description, v.Link, v.Image, filepath); err != nil {
+			fmt.Println("Error: Cannot save the Markdown ", filepath)
+			continue
+		}
 
 		fmt.Println("--- Testing Building File ---")
 		if BuildFails() {
@@ -767,14 +790,14 @@ func TestNewPosts() {
 			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο και την εικόνα
 			os.Remove(filepath)
 			if !imageAlreadyPreExists {
-				os.Remove(imageFilepath)	// ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
+				os.Remove(imageFilepath) // ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
 			}
 			continue
 		}
 
 		// Αφαιρεσε το άρθρο, όπως και να χει γιατι αυτο ήταν απλά ένα τεστ
 		if !imageAlreadyPreExists {
-			os.Remove(imageFilepath)	// ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
+			os.Remove(imageFilepath) // ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
 		}
 		os.Remove(filepath)
 
@@ -837,7 +860,7 @@ func CreateNewPosts() {
 			log.Printf("Skipping this specific new article %v\n\n\n", v.Link)
 			// Δεν ήταν καλή η είδηση. Διέγραψε το αρχείο
 			if !imageAlreadyPreExists {
-				os.Remove(imageFilepath)	// ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
+				os.Remove(imageFilepath) // ειδική περίπτωση όπου η φωτο προυπάρχει (για άλλα άρθρα) οπότε μην την σβήνεις
 			}
 			os.Remove(filepath)
 			continue

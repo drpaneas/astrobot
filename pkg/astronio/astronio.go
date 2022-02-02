@@ -53,20 +53,24 @@ func GetNews() {
 	Doc.Find("#main > div > ul > li > article > div > a").Each(func(i int, s *goquery.Selection) {
 		link, ok = s.Attr("href")
 		if ok {
-					if !testURLReachable(link) {
-						link = baseURL + link
-					}
+			if !testURLReachable(link) {
+				link = baseURL + link
+			}
 
-					image, _ = s.Attr("data-bgset")
+			image, _ = s.Attr("data-bgset")
 
-					NewsDBastronio = append(NewsDBastronio, News{
-						Description: desc,
-						Image:       image,
-						Link:        link,
-						Source:      "astronio.gr",
-						Title:       title,
-					})
-				}
+			if strings.Contains(image, "?resize=") {
+				image = strings.Split(image, "?resize=")[0]
+			}
+
+			NewsDBastronio = append(NewsDBastronio, News{
+				Description: desc,
+				Image:       image,
+				Link:        link,
+				Source:      "astronio.gr",
+				Title:       title,
+			})
+		}
 	})
 
 	// For every item in the Astronews News DB, get the Title and the first paragraph for the desc.
@@ -133,7 +137,6 @@ func getHTML(page string) (doc *goquery.Document) {
 	}
 	return doc
 }
-
 
 func replaceGreekRunes(title string) string {
 	if strings.Contains(title, "“") {
