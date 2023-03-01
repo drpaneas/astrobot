@@ -10,6 +10,5 @@ require (
 	github.com/ecnepsnai/discord v1.2.0
 	github.com/grokify/html-strip-tags-go v0.0.0-20200923094847-079d207a09f1
 	github.com/hashicorp/go-retryablehttp v0.6.7
-	github.com/matrix-org/gomatrix v0.0.0-20200827122206-7dd5e2a05bcd
-	golang.org/x/text v0.3.3
+	golang.org/x/text v0.3.8
 )
