@@ -1,6 +1,6 @@
 module github.com/drpaneas/astrobot
 
-go 1.23.0
+go 1.25.0
 
 require (
 	cloud.google.com/go/translate v1.7.0
@@ -10,7 +10,7 @@ require (
 	github.com/ecnepsnai/discord v1.2.0
 	github.com/grokify/html-strip-tags-go v0.0.0-20200923094847-079d207a09f1
 	github.com/hashicorp/go-retryablehttp v0.7.7
-	golang.org/x/text v0.16.0
+	golang.org/x/text v0.35.0
 )
 
 require (
@@ -24,7 +24,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.7.1 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/image v0.18.0 // indirect
+	golang.org/x/image v0.38.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
